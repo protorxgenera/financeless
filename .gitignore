@@ -1,0 +1,6 @@
+# IDEs (IntelliJ)
+.idea/
+
+# Backend (Spring Boot & Java)
+backend/target/
+backend/.mvn/
