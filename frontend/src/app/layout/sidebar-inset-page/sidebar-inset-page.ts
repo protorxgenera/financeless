@@ -2,10 +2,11 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
 import {HlmSidebarImports} from '@spartan-ng/helm/sidebar';
 import {SiteHeader} from './sidebar-inset/site-header/site-header';
 import {AppSidebarInset} from './sidebar-inset/app-sidebar-inset/app-sidebar-inset';
+import {RouterOutlet} from '@angular/router';
 
 @Component({
-    selector: 'spartan-sidebar-inset',
-    imports: [HlmSidebarImports, SiteHeader, AppSidebarInset],
+    selector: 'sidebar-inset-page',
+    imports: [HlmSidebarImports, SiteHeader, AppSidebarInset, RouterOutlet],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

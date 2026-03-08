@@ -11,7 +11,7 @@ import {HlmButton} from '@spartan-ng/helm/button';
 // import { NavUser } from '../../shared/sidebar/nav-user';
 
 @Component({
-    selector: 'spartan-app-sidebar-inset',
+    selector: 'sidebar-inset',
     // imports: [HlmSidebarImports, NgIcon, NavMain, NavProjects, NavUser, NavSecondary],
     imports: [HlmSidebarImports, NgIcon, RouterOutlet, RouterLink, HlmButton],
     providers: [provideIcons({ lucideCommand })],

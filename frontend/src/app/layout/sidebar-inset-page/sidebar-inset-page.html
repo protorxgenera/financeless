@@ -1,13 +1,23 @@
-<spartan-app-sidebar-inset>
+<sidebar-inset>
     <main hlmSidebarInset>
-        <spartan-site-header-inset/>
+        <header-inset/>
+
+        <!--    <main-->
+        <!--        class="bg-background relative flex w-full flex-1 flex-col md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2">-->
+
+        <!--        -->
+        <!--    </main>-->
+
         <div class="flex flex-1 flex-col gap-4 p-4">
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div class="bg-muted/50 aspect-video rounded-xl"></div>
-                <div class="bg-muted/50 aspect-video rounded-xl"></div>
-                <div class="bg-muted/50 aspect-video rounded-xl"></div>
-            </div>
-            <div class="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min"></div>
+
+        <router-outlet/>
+
+<!--            <div class="grid auto-rows-min gap-4 md:grid-cols-3">-->
+<!--                <div class="bg-muted/50 aspect-video rounded-xl"></div>-->
+<!--                <div class="bg-muted/50 aspect-video rounded-xl"></div>-->
+<!--                <div class="bg-muted/50 aspect-video rounded-xl"></div>-->
+<!--            </div>-->
+<!--            <div class="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min"></div>-->
         </div>
     </main>
-</spartan-app-sidebar-inset>
+</sidebar-inset>

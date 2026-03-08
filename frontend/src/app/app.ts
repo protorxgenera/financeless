@@ -1,11 +1,9 @@
-import {Component, signal} from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import {HlmButton} from '@spartan-ng/helm/button';
+import {Component} from '@angular/core';
 import SidebarInsetPage from './layout/sidebar-inset-page/sidebar-inset-page';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, RouterLink, HlmButton, SidebarInsetPage],
+    imports: [SidebarInsetPage],
     templateUrl: './app.html',
     styleUrl: './app.css'
 })
