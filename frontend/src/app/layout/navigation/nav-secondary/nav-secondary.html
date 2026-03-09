@@ -1,1 +1,14 @@
-<p>nav-secondary works!</p>
+<hlm-sidebar-group>
+    <div hlmSidebarGroupContent>
+        <ul hlmSidebarMenu>
+            @for (item of items(); track $index) {
+                <li hlmSidebarMenuItem>
+                    <a hlmSidebarMenuButton size="sm" [routerLink]="item.url">
+                        <ng-icon [name]="item.icon" />
+                        {{ item.title }}
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</hlm-sidebar-group>

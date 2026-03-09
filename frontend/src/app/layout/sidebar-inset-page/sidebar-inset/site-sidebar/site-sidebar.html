@@ -21,13 +21,10 @@
 
         <hlm-sidebar-content>
 
-            <button hlmBtn routerLink="/">dashboard</button>
-            <button hlmBtn routerLink="/transactions">transactions</button>
-            <button hlmBtn routerLink="/analytics">analytics</button>
-            <button hlmBtn routerLink="/settings">settings</button>
-            <!--            <spartan-nav-main [items]="data.navMain" />-->
+                        <nav-main [items]="data.navMain" />
+
             <!--            <spartan-nav-projects [projects]="data.projects" />-->
-            <!--            <spartan-nav-secondary class="mt-auto" [items]="data.navSecondary" />-->
+                        <nav-secondary class="mt-auto" [items]="data.navSecondary" />
         </hlm-sidebar-content>
 
         <hlm-sidebar-footer>

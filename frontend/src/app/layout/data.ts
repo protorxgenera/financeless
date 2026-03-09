@@ -7,25 +7,25 @@ export const data = {
     navMain: [
         {
             title: 'Dashboard',
-            url: '.',
-            icon: 'tablerDashboard',
+            url: '',
+            icon: 'lucideGauge',
             isActive: true,
         },
         {
             title: 'Transactions',
-            url: '.',
-            icon: 'tablerDatabase',
+            url: '/transactions',
+            icon: 'lucideHistory',
         },
         {
             title: 'Analytics',
-            url: '.',
-            icon: 'tablerChartBar',
+            url: '/analytics',
+            icon: 'lucideChartNoAxesColumn',
         },
     ],
     navSecondary: [
         {
             title: 'Settings',
-            url: '.',
+            url: '/settings',
             icon: 'lucideSettings2',
         },
     ],

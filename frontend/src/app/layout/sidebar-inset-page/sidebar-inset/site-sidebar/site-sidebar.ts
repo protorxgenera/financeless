@@ -12,6 +12,8 @@ import {RouterLink, RouterOutlet} from '@angular/router';
 import {HlmButton} from '@spartan-ng/helm/button';
 import { data } from '../../../data';
 import {NavUser} from '../../../navigation/nav-user/nav-user';
+import {NavMain} from '../../../navigation/nav-main/nav-main';
+import {NavSecondary} from '../../../navigation/nav-secondary/nav-secondary';
 
 @Component({
     selector: 'site-sidebar',
@@ -27,7 +29,9 @@ import {NavUser} from '../../../navigation/nav-user/nav-user';
         HlmSidebarWrapper,
         NgIcon,
         RouterLink,
-        NavUser
+        NavUser,
+        NavMain,
+        NavSecondary
     ],
     providers: [provideIcons({ lucideCommand })],
     changeDetection: ChangeDetectionStrategy.OnPush,
