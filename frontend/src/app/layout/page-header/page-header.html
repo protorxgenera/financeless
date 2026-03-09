@@ -1,0 +1,6 @@
+<header>
+    <p class="text-muted-foreground font-switzerland font-normal">Good morning, {{ user.name }}</p>
+    <h1 class="text-2xl font-bold font-switzerland">
+        Your {{ route.snapshot.firstChild?.data?.['title'] || 'Dashboard' }}
+    </h1>
+</header>

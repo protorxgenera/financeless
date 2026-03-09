@@ -7,18 +7,22 @@ import {Settings} from './pages/settings/settings';
 export const routes: Routes = [
     {
         path: '',
-        component: Dashboard
+        component: Dashboard,
+        data: { title: 'dashboard' }
     },
     {
         path: 'transactions',
-        component: Transactions
+        component: Transactions,
+        data: { title: 'transactions' }
     },
     {
         path: 'analytics',
-        component: Analytics
+        component: Analytics,
+        data: { title: 'analytics' }
     },
     {
         path: 'settings',
-        component: Settings
+        component: Settings,
+        data: { title: 'settings' }
     }
 ];
