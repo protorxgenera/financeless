@@ -5,12 +5,12 @@
             <hlm-collapsible [expanded]="item.isActive ?? false">
                 <li hlmSidebarMenuItem>
                     <a hlmSidebarMenuButton [routerLink]="item.url">
-                        <ng-icon [name]="item.icon" />
+                        <ng-icon [name]="item.icon"/>
                         {{ item.title }}
                     </a>
                     @if (item.items; as subItems) {
                         <button hlmCollapsibleTrigger hlmSidebarMenuAction class="data-[state=open]:rotate-90">
-                            <ng-icon name="lucideChevronRight" />
+                            <ng-icon name="lucideChevronRight"/>
                         </button>
                         <hlm-collapsible-content>
                             <ul hlmSidebarMenuSub>

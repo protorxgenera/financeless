@@ -6,6 +6,20 @@
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
 
 @font-face {
+    font-family: 'Switzerland';
+    src: url('public/assets/fonts/switzerland/display/switzerland-display-regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Switzerland';
+    src: url('public/assets/fonts/switzerland/display/switzerland-display-bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'SwitzerlandText';
     src: url('public/assets/fonts/switzerland/text/switzerland-text-light.woff2') format('woff2');
     font-weight: 300;
@@ -63,8 +77,11 @@
 }
 
 @theme {
-    /* .font-switzerland */
-    --font-switzerland: "SwitzerlandText", ui-sans-serif, system-ui;
+    /* .font-switzerland-text */
+    --font-switzerland: "Switzerland", ui-sans-serif, system-ui;
+
+    /* .font-switzerland-text */
+    --font-switzerland-text: "SwitzerlandText", ui-sans-serif, system-ui;
 
     /* .font-zeit utility */
     --font-zeit: "Zeit", ui-serif, system-ui;

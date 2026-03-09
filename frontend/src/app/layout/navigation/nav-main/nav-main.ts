@@ -1,15 +1,8 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {
-    lucideBookOpen,
-    lucideBot, lucideChartNoAxesColumn,
-    lucideChevronRight,
-    lucideGauge, lucideHistory,
-    lucideSettings2,
-    lucideSquareTerminal
-} from '@ng-icons/lucide';
+import {lucideChartNoAxesColumn, lucideGauge, lucideHistory, lucideSettings2} from '@ng-icons/lucide';
 import {NgIcon, provideIcons} from '@ng-icons/core';
-import { HlmCollapsibleImports } from '@spartan-ng/helm/collapsible';
-import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
+import {HlmCollapsibleImports} from '@spartan-ng/helm/collapsible';
+import {HlmSidebarImports} from '@spartan-ng/helm/sidebar';
 import {RouterLink} from '@angular/router';
 
 @Component({

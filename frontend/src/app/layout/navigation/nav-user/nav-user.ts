@@ -2,7 +2,9 @@ import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angu
 import {HlmIconImports} from '@spartan-ng/helm/icon';
 import {HlmSidebarImports, HlmSidebarService} from '@spartan-ng/helm/sidebar';
 import {
-    HlmDropdownMenu, HlmDropdownMenuGroup, HlmDropdownMenuItem,
+    HlmDropdownMenu,
+    HlmDropdownMenuGroup,
+    HlmDropdownMenuItem,
     HlmDropdownMenuLabel,
     HlmDropdownMenuSeparator,
     HlmDropdownMenuTrigger

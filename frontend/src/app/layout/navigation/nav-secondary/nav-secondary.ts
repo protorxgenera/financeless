@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {provideIcons} from '@ng-icons/core';
-import {lucideLifeBuoy, lucideSend, lucideSettings2} from "@ng-icons/lucide";
+import {lucideSettings2} from "@ng-icons/lucide";
 import {HlmSidebarImports} from '@spartan-ng/helm/sidebar';
 import {HlmIconImports} from '@spartan-ng/helm/icon';
 import {RouterLink} from '@angular/router';

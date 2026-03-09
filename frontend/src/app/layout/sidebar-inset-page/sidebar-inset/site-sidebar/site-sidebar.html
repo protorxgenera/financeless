@@ -20,15 +20,12 @@
         </hlm-sidebar-header>
 
         <hlm-sidebar-content>
-
-                        <nav-main [items]="data.navMain" />
-
-            <!--            <spartan-nav-projects [projects]="data.projects" />-->
-                        <nav-secondary class="mt-auto" [items]="data.navSecondary" />
+            <nav-main [items]="data.navMain"/>
+            <nav-secondary class="mt-auto" [items]="data.navSecondary"/>
         </hlm-sidebar-content>
 
         <hlm-sidebar-footer>
-                        <nav-user [user]="data.user" />
+            <nav-user [user]="data.user"/>
         </hlm-sidebar-footer>
 
     </hlm-sidebar>
