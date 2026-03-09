@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import SidebarInsetPage from './sidebar-inset-page';
+import { NavUser } from './nav-user';
 
-describe('SidebarInsetPage', () => {
-    let component: SidebarInsetPage;
-    let fixture: ComponentFixture<SidebarInsetPage>;
+describe('NavUser', () => {
+    let component: NavUser;
+    let fixture: ComponentFixture<NavUser>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SidebarInsetPage],
+            imports: [NavUser],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(SidebarInsetPage);
+        fixture = TestBed.createComponent(NavUser);
         component = fixture.componentInstance;
         await fixture.whenStable();
     });
