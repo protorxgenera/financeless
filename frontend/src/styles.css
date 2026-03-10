@@ -165,3 +165,8 @@
         @apply bg-background text-foreground;
     }
 }
+
+@theme {
+    --color-income: #111f17;
+    --color-income-hover: #1a2e22;
+}

@@ -1,146 +1,149 @@
+<div class="flex flex-col justify-between gap-4 py-4 sm:flex-row sm:items-center">
 
-
-    <div class="flex flex-col justify-between gap-4 py-4 sm:flex-row sm:items-center">
-
-        <hlm-tabs tab="past">
+    <hlm-tabs tab="past">
         <hlm-tabs-list>
             <button hlmTabsTrigger="past" (click)="setStatusFilter('COMPLETED')">History</button>
             <button hlmTabsTrigger="upcoming" (click)="setStatusFilter('UPCOMING')">Upcoming</button>
         </hlm-tabs-list>
-        </hlm-tabs>
+    </hlm-tabs>
 
 
-        <table-actions/>
+    <table-actions/>
 
-        <ng-template #menu>
-            <hlm-dropdown-menu class="w-32">
-                @for (column of _hidableColumns; track column.id) {
-                    <button
-                        hlmDropdownMenuCheckbox
-                        class="capitalize"
-                        [checked]="column.getIsVisible()"
-                        (triggered)="column.toggleVisibility()"
-                    >
-                        <hlm-dropdown-menu-checkbox-indicator/>
-                        {{ column.columnDef.id }}
-                    </button>
-                }
-            </hlm-dropdown-menu>
-        </ng-template>
-    </div>
-    <div class="max-h-[750px] overflow-auto rounded-md border">
-        <!-- we defer the loading of the table, because tanstack manipulates the DOM with flexRender which can cause errors during SSR -->
-        @defer {
-            <div hlmTableContainer>
+    <ng-template #menu>
+        <hlm-dropdown-menu class="w-32">
+            @for (column of _hidableColumns; track column.id) {
+                <button
+                    hlmDropdownMenuCheckbox
+                    class="capitalize"
+                    [checked]="column.getIsVisible()"
+                    (triggered)="column.toggleVisibility()"
+                >
+                    <hlm-dropdown-menu-checkbox-indicator/>
+                    {{ column.columnDef.id }}
+                </button>
+            }
+        </hlm-dropdown-menu>
+    </ng-template>
+</div>
+<div class="max-h-[750px] overflow-auto rounded-md border">
+    <!-- we defer the loading of the table, because tanstack manipulates the DOM with flexRender which can cause errors during SSR -->
+    @defer {
+        <div hlmTableContainer>
 
-                <table hlmTable>
-                    <thead hlmTHead>
-                        @for (headerGroup of _table.getHeaderGroups(); track headerGroup.id) {
-                            <tr hlmTr>
-                                @for (header of headerGroup.headers; track header.id) {
-                                    <th hlmTh [attr.colSpan]="header.colSpan">
-                                        @if (!header.isPlaceholder) {
-                                            <ng-container
-                                                *flexRender="header.column.columnDef.header; props: header.getContext(); let headerText"
-                                            >
-                                                <div [innerHTML]="headerText"></div>
-                                            </ng-container>
-                                        }
-                                    </th>
-                                }
-                            </tr>
-                        }
-                    </thead>
-                    <tbody hlmTBody>
-                        @for (row of _table.getRowModel().rows; track row.id) {
-                            <tr hlmTr [attr.key]="row.id" [attr.data-state]="row.getIsSelected() && 'selected'">
-                                @for (cell of row.getVisibleCells(); track $index) {
-                                    <td hlmTd>
+            <table hlmTable>
+                <thead hlmTHead>
+                    @for (headerGroup of _table.getHeaderGroups(); track headerGroup.id) {
+                        <tr hlmTr>
+                            @for (header of headerGroup.headers; track header.id) {
+                                <th hlmTh [attr.colSpan]="header.colSpan">
+                                    @if (!header.isPlaceholder) {
                                         <ng-container
-                                            *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cell">
-                                            <div [innerHTML]="cell"></div>
+                                            *flexRender="header.column.columnDef.header; props: header.getContext(); let headerText"
+                                        >
+                                            <div [innerHTML]="headerText"></div>
                                         </ng-container>
-                                    </td>
-                                }
-                            </tr>
-                        } @empty {
-                            <tr hlmTr>
-                                <td hlmTd class="h-24 text-center" [attr.colspan]="_columns.length">No results.</td>
-                            </tr>
+                                    }
+                                </th>
+                            }
+                        </tr>
+                    }
+                </thead>
+                <tbody hlmTBody>
+                    @for (row of _table.getRowModel().rows; track row.id) {
+                        <tr hlmTr [attr.key]="row.id"
+                            [attr.data-state]="row.getIsSelected() && 'selected'"
+                            [class.bg-income]="row.original.amount > 0"
+                            [class.text-green-500]="row.original.amount > 0"
+                            [class.hover:bg-income-hover]="row.original.amount > 0">
+
+                        @for (cell of row.getVisibleCells(); track $index) {
+                            <td hlmTd>
+                                <ng-container
+                                    *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cell">
+                                    <div [innerHTML]="cell"></div>
+                                </ng-container>
+                            </td>
                         }
-                    </tbody>
-                </table>
+                        </tr>
+                    } @empty {
+                        <tr hlmTr>
+                            <td hlmTd class="h-24 text-center" [attr.colspan]="_columns.length">No results.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
-            </div>
-        }
-    </div>
+        </div>
+    }
+</div>
 
-    <div class="mt-4 flex flex-col justify-between sm:flex-row sm:items-center">
+<div class="mt-4 flex flex-col justify-between sm:flex-row sm:items-center">
 				<span class="text-muted-foreground text-sm">
 					{{ _table.getSelectedRowModel().rows.length }} of {{ _table.getRowCount() }} row(s) selected
 				</span>
-        <div class="mt-2 flex gap-8 sm:mt-0">
-            <div class="flex gap-2">
-                <span hlmLabel>Rows per page:</span>
-                <brn-select
-                    class="inline-block"
-                    placeholder="{{ _availablePageSizes[0] }}"
-                    [ngModel]="_table.getState().pagination.pageSize"
-                    (ngModelChange)="_table.setPageSize($event); _table.resetPageIndex()"
-                >
-                    <hlm-select-trigger size="sm" class="mr-1 inline-flex h-8 w-fit">
-                        <hlm-select-value />
-                    </hlm-select-trigger>
-                    <hlm-select-content>
-                        @for (size of _availablePageSizes; track size) {
-                            <hlm-option [value]="size">
-                                {{ size === 10000 ? 'All' : size }}
-                            </hlm-option>
-                        }
-                    </hlm-select-content>
-                </brn-select>
-            </div>
+    <div class="mt-2 flex gap-8 sm:mt-0">
+        <div class="flex gap-2">
+            <span hlmLabel>Rows per page:</span>
+            <brn-select
+                class="inline-block"
+                placeholder="{{ _availablePageSizes[0] }}"
+                [ngModel]="_table.getState().pagination.pageSize"
+                (ngModelChange)="_table.setPageSize($event); _table.resetPageIndex()"
+            >
+                <hlm-select-trigger size="sm" class="mr-1 inline-flex h-8 w-fit">
+                    <hlm-select-value/>
+                </hlm-select-trigger>
+                <hlm-select-content>
+                    @for (size of _availablePageSizes; track size) {
+                        <hlm-option [value]="size">
+                            {{ size === 10000 ? 'All' : size }}
+                        </hlm-option>
+                    }
+                </hlm-select-content>
+            </brn-select>
+        </div>
 
-            <span hlmLabel>Page {{ _table.getState().pagination.pageIndex + 1 }} of {{ _table.getPageCount() }}</span>
+        <span hlmLabel>Page {{ _table.getState().pagination.pageIndex + 1 }} of {{ _table.getPageCount() }}</span>
 
-            <div class="flex space-x-1">
-                <button
-                    size="icon-sm"
-                    variant="outline"
-                    hlmBtn
-                    [disabled]="!_table.getCanPreviousPage()"
-                    (click)="_table.firstPage()"
-                >
-                    <ng-icon hlm name="lucideChevronsLeft" size="sm" />
-                </button>
-                <button
-                    size="icon-sm"
-                    variant="outline"
-                    hlmBtn
-                    [disabled]="!_table.getCanPreviousPage()"
-                    (click)="_table.previousPage()"
-                >
-                    <ng-icon hlm name="lucideChevronLeft" size="sm" />
-                </button>
-                <button
-                    size="icon-sm"
-                    variant="outline"
-                    hlmBtn
-                    [disabled]="!_table.getCanNextPage()"
-                    (click)="_table.nextPage()"
-                >
-                    <ng-icon hlm name="lucideChevronRight" size="sm" />
-                </button>
-                <button
-                    size="icon-sm"
-                    variant="outline"
-                    hlmBtn
-                    [disabled]="!_table.getCanNextPage()"
-                    (click)="_table.lastPage()"
-                >
-                    <ng-icon hlm name="lucideChevronsRight" size="sm" />
-                </button>
-            </div>
+        <div class="flex space-x-1">
+            <button
+                size="icon-sm"
+                variant="outline"
+                hlmBtn
+                [disabled]="!_table.getCanPreviousPage()"
+                (click)="_table.firstPage()"
+            >
+                <ng-icon hlm name="lucideChevronsLeft" size="sm"/>
+            </button>
+            <button
+                size="icon-sm"
+                variant="outline"
+                hlmBtn
+                [disabled]="!_table.getCanPreviousPage()"
+                (click)="_table.previousPage()"
+            >
+                <ng-icon hlm name="lucideChevronLeft" size="sm"/>
+            </button>
+            <button
+                size="icon-sm"
+                variant="outline"
+                hlmBtn
+                [disabled]="!_table.getCanNextPage()"
+                (click)="_table.nextPage()"
+            >
+                <ng-icon hlm name="lucideChevronRight" size="sm"/>
+            </button>
+            <button
+                size="icon-sm"
+                variant="outline"
+                hlmBtn
+                [disabled]="!_table.getCanNextPage()"
+                (click)="_table.lastPage()"
+            >
+                <ng-icon hlm name="lucideChevronsRight" size="sm"/>
+            </button>
         </div>
     </div>
+</div>
 
