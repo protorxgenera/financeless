@@ -31,6 +31,7 @@ import {TableHeadSortButton} from './components/sort-header-button';
 import {Transaction} from './services/transactions-model';
 import {TransactionsService} from './services/transactions-service';
 import {StatusIconCell} from './components/status-icon-cell';
+import {TableActions} from './components/table-actions';
 
 @Component({
     selector: 'transaction-table',
@@ -47,6 +48,7 @@ import {StatusIconCell} from './components/status-icon-cell';
         HlmTableImports,
         HlmTabsImports,
         HlmMuted,
+        TableActions,
     ],
     providers: [provideIcons({ lucideChevronDown })],
     templateUrl: './transaction-table.html',
@@ -85,6 +87,7 @@ export class TransactionTable {
         {
             accessorKey: 'category',
             id: 'category',
+            filterFn: 'arrIncludesSome',
             header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
             cell: (info) => `<div class="lowercase">${info.getValue<string>()}</div>`,
         },
@@ -98,10 +101,7 @@ export class TransactionTable {
             accessorKey: 'transaction_status',
             id: 'status',
             header: 'Status',
-            enableResizing: false,
-            size: 85,
-            minSize: 20,
-            maxSize: Number.MAX_SAFE_INTEGER,
+            filterFn: 'arrIncludesSome',
             enableSorting: false,
             cell: () => flexRenderComponent(StatusIconCell),
         },
@@ -132,7 +132,7 @@ export class TransactionTable {
     private readonly _rowSelection = signal<RowSelectionState>({});
     private readonly _columnVisibility = signal<VisibilityState>({});
 
-    protected readonly _table = createAngularTable<Transaction>(() => ({
+    readonly _table = createAngularTable<Transaction>(() => ({
         data: this.TRANSACTION_DATA(),
         columns: this._columns,
         onSortingChange: (updater) => {
