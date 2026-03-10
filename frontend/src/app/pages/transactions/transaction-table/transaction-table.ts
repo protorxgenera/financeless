@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideChevronDown } from '@ng-icons/lucide';
@@ -10,7 +10,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
-import { hlmMuted } from '@spartan-ng/helm/typography';
+import {HlmMuted, hlmMuted} from '@spartan-ng/helm/typography';
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -28,13 +28,9 @@ import {
 import {ActionDropdown} from './components/action-dropdown';
 import {TableHeadSelection, TableRowSelection} from './components/selection-column';
 import {TableHeadSortButton} from './components/sort-header-button';
-
-export type Payment = {
-    id: string;
-    amount: number;
-    status: 'pending' | 'processing' | 'success' | 'failed';
-    email: string;
-};
+import {Transaction} from './services/transactions-model';
+import {TransactionsService} from './services/transactions-service';
+import {StatusIconCell} from './components/status-icon-cell';
 
 @Component({
     selector: 'transaction-table',
@@ -50,17 +46,23 @@ export type Payment = {
         HlmSelectImports,
         HlmTableImports,
         HlmTabsImports,
+        HlmMuted,
     ],
     providers: [provideIcons({ lucideChevronDown })],
     templateUrl: './transaction-table.html',
     styleUrl: './transaction-table.css',
 })
 export class TransactionTable {
+
+    private service = inject(TransactionsService)
+
+    TRANSACTION_DATA = this.service.getTransactions()
+
     protected _filterChanged(event: Event) {
-        this._table.getColumn('email')?.setFilterValue((event.target as HTMLInputElement).value);
+        this._table.getColumn('name')?.setFilterValue((event.target as HTMLInputElement).value);
     }
 
-    protected readonly _columns: ColumnDef<Payment>[] = [
+    protected readonly _columns: ColumnDef<Transaction>[] = [
         {
             id: 'select',
             header: () => flexRenderComponent(TableHeadSelection),
@@ -69,17 +71,39 @@ export class TransactionTable {
             enableHiding: false,
         },
         {
-            accessorKey: 'status',
-            id: 'status',
-            header: 'Status',
-            enableSorting: false,
-            cell: (info) => `<span class="capitalize">${info.getValue<string>()}</span>`,
+            accessorKey: 'date',
+            id: 'date',
+            header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
+            cell: (info) => `<div>${info.getValue<string>()}</div>`,
         },
         {
-            accessorKey: 'email',
-            id: 'email',
+            accessorKey: 'name',
+            id: 'name',
+            header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
+            cell: (info) => `<div>${info.getValue<string>()}</div>`,
+        },
+        {
+            accessorKey: 'category',
+            id: 'category',
             header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
             cell: (info) => `<div class="lowercase">${info.getValue<string>()}</div>`,
+        },
+        {
+            accessorKey: 'details',
+            id: 'details',
+            header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
+            cell: (info) => `<div class="lowercase">${info.getValue<string>()}</div>`,
+        },
+        {
+            accessorKey: 'transaction_status',
+            id: 'status',
+            header: 'Status',
+            enableResizing: false,
+            size: 85,
+            minSize: 20,
+            maxSize: Number.MAX_SAFE_INTEGER,
+            enableSorting: false,
+            cell: () => flexRenderComponent(StatusIconCell),
         },
         {
             accessorKey: 'amount',
@@ -108,8 +132,8 @@ export class TransactionTable {
     private readonly _rowSelection = signal<RowSelectionState>({});
     private readonly _columnVisibility = signal<VisibilityState>({});
 
-    protected readonly _table = createAngularTable<Payment>(() => ({
-        data: PAYMENT_DATA,
+    protected readonly _table = createAngularTable<Transaction>(() => ({
+        data: this.TRANSACTION_DATA(),
         columns: this._columns,
         onSortingChange: (updater) => {
             updater instanceof Function ? this._sorting.update(updater) : this._sorting.set(updater);
@@ -141,37 +165,6 @@ export class TransactionTable {
         const typedValue = target.value;
         this._table.setGlobalFilter(typedValue);
     }
-}
 
-const PAYMENT_DATA: Payment[] = [
-    {
-        id: 'm5gr84i9',
-        amount: 316,
-        status: 'success',
-        email: 'ken99@yahoo.com',
-    },
-    {
-        id: '3u1reuv4',
-        amount: 242,
-        status: 'success',
-        email: 'Abe45@gmail.com',
-    },
-    {
-        id: 'derv1ws0',
-        amount: 837,
-        status: 'processing',
-        email: 'Monserrat44@gmail.com',
-    },
-    {
-        id: '5kma53ae',
-        amount: 874,
-        status: 'success',
-        email: 'Silas22@gmail.com',
-    },
-    {
-        id: 'bhqecj4p',
-        amount: 721,
-        status: 'failed',
-        email: 'carmella@hotmail.com',
-    },
-];
+    protected readonly hlmMuted = hlmMuted;
+}

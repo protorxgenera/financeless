@@ -5,7 +5,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
-import {Payment} from '../transaction-table';
+import {Transaction} from '../services/transactions-model';
 
 
 @Component({
@@ -21,7 +21,7 @@ import {Payment} from '../transaction-table';
 		<ng-template #ActionDropDownMenu>
 			<hlm-dropdown-menu>
 				<hlm-dropdown-menu-label>Actions</hlm-dropdown-menu-label>
-				<button hlmDropdownMenuItem (click)="copyPaymentId()">Copy payment ID</button>
+				<button hlmDropdownMenuItem (click)="copyTransactionId()">Copy payment ID</button>
 				<hlm-dropdown-menu-separator />
 				<button hlmDropdownMenuItem>View customer</button>
 				<button hlmDropdownMenuItem>View payment details</button>
@@ -30,9 +30,9 @@ import {Payment} from '../transaction-table';
 	`,
 })
 export class ActionDropdown {
-    private readonly _context = injectFlexRenderContext<CellContext<Payment, unknown>>();
+    private readonly _context = injectFlexRenderContext<CellContext<Transaction, unknown>>();
 
-    copyPaymentId() {
+    copyTransactionId() {
         const payment = this._context.row.original;
         navigator.clipboard.writeText(payment.id);
     }
