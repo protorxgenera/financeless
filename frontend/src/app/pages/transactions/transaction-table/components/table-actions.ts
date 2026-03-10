@@ -32,6 +32,7 @@ import {TransactionTable} from '../transaction-table';
 import {StatusIconPipe} from '../pipes/status-icon-pipe';
 import {TransactionStatus} from '../services/transactions-model';
 import {TransactionsService} from '../services/transactions-service';
+import {CalendarDatePickerRangeComponent} from './calendar-date-picker-range';
 
 @Component({
     selector: 'table-actions',
@@ -47,6 +48,7 @@ import {TransactionsService} from '../services/transactions-service';
         HlmPopoverImports,
         HlmCheckboxImports,
         StatusIconPipe,
+        CalendarDatePickerRangeComponent,
     ],
     providers: [
         provideIcons({
@@ -73,7 +75,7 @@ import {TransactionsService} from '../services/transactions-service';
         class: 'block',
     },
     template: `
-		<div class="wip-table-search flex flex-col justify-between gap-4 sm:flex-row">
+		<div class="wip-table-search flex flex-col justify-between items-center gap-4 sm:flex-row">
 			<div class="flex flex-col justify-between gap-4 sm:flex-row">
 				<!-- TASK TITLE FILTER -->
 				<input hlmInput class="h-8 w-full md:w-80" placeholder="Search for transactions..." (input)="transactionFilterChange($event)" />
@@ -166,7 +168,7 @@ import {TransactionsService} from '../services/transactions-service';
 				}
 			</div>
 
-			<!-- Column visibility -->
+			<!-- COLUMN VISIBILITY -->
 			<button hlmBtn class="h-8" variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
 				Columns
 				<ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" />
@@ -186,6 +188,10 @@ import {TransactionsService} from '../services/transactions-service';
 					}
 				</hlm-dropdown-menu>
 			</ng-template>
+
+            <!-- CALENDAR RANGE PICKER -->
+            <cal-date-picker-range/>
+
 		</div>
 	`,
 })
