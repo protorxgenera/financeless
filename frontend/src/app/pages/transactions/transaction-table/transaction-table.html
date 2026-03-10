@@ -11,12 +11,6 @@
 
         <table-actions/>
 
-        <input hlmInput class="w-full md:w-80" placeholder="Search for transactions..." (input)="_filterChanged($event)"/>
-
-        <button hlmBtn variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
-            Columns
-            <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm"/>
-        </button>
         <ng-template #menu>
             <hlm-dropdown-menu class="w-32">
                 @for (column of _hidableColumns; track column.id) {

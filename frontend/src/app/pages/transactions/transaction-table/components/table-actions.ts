@@ -76,7 +76,7 @@ import {TransactionsService} from '../services/transactions-service';
 		<div class="wip-table-search flex flex-col justify-between gap-4 sm:flex-row">
 			<div class="flex flex-col justify-between gap-4 sm:flex-row">
 				<!-- TASK TITLE FILTER -->
-				<input hlmInput class="h-8 w-full md:w-80" placeholder="Filter tasks..." (input)="taskFilterChange($event)" />
+				<input hlmInput class="h-8 w-full md:w-80" placeholder="Search for transactions..." (input)="transactionFilterChange($event)" />
 
 				<!-- STATUS FILTER -->
 				<hlm-popover
@@ -119,7 +119,7 @@ import {TransactionsService} from '../services/transactions-service';
 					</hlm-command>
 				</hlm-popover>
 
-				<!-- CATEGORY FILTER more like CATEGORY FILTER -->
+				<!-- CATEGORY FILTER -->
 				<hlm-popover
 					[state]="_categoryState()"
 					(stateChanged)="categoryStateChanged($event)"
@@ -167,7 +167,7 @@ import {TransactionsService} from '../services/transactions-service';
 			</div>
 
 			<!-- Column visibility -->
-			<button hlmBtn variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
+			<button hlmBtn class="h-8" variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
 				Columns
 				<ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" />
 			</button>
@@ -207,8 +207,8 @@ export class TableActions {
     protected readonly _categories = signal([...this.currentCategories]);
     protected readonly _categoryState = signal<'closed' | 'open'>('closed');
 
-    protected taskFilterChange(event: Event) {
-        this._table.getColumn('title')?.setFilterValue((event.target as HTMLInputElement).value);
+    protected transactionFilterChange(event: Event) {
+        this._table.getColumn('name')?.setFilterValue((event.target as HTMLInputElement).value);
     }
 
     isStatusSelected(status: TransactionStatus): boolean {

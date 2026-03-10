@@ -60,10 +60,6 @@ export class TransactionTable {
 
     TRANSACTION_DATA = this.service.getTransactions()
 
-    protected _filterChanged(event: Event) {
-        this._table.getColumn('name')?.setFilterValue((event.target as HTMLInputElement).value);
-    }
-
     protected readonly _columns: ColumnDef<Transaction>[] = [
         {
             id: 'select',
