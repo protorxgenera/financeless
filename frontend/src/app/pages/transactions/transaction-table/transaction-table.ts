@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {
@@ -61,7 +61,11 @@ import {HlmLabelImports} from '@spartan-ng/helm/label';
     templateUrl: './transaction-table.html',
     styleUrl: './transaction-table.css',
 })
-export class TransactionTable {
+export class TransactionTable implements OnInit {
+
+    ngOnInit() {
+        this.setStatusFilter('COMPLETED')
+    }
 
     private service = inject(TransactionsService)
 
@@ -131,7 +135,9 @@ export class TransactionTable {
     ];
 
     private readonly _columnFilters = signal<ColumnFiltersState>([]);
-    private readonly _sorting = signal<SortingState>([]);
+    private readonly _sorting = signal<SortingState>([
+        { id: 'date', desc: true }
+    ]);
     private readonly _rowSelection = signal<RowSelectionState>({});
     private readonly _columnVisibility = signal<VisibilityState>({});
     private readonly _pagination = signal<PaginationState>({
@@ -139,7 +145,11 @@ export class TransactionTable {
         pageIndex: 0,
     });
     protected readonly _availablePageSizes = [5, 10, 13, 20, 10000];
-    protected readonly _pageSize = signal(this._availablePageSizes[1]); // default to page size 10
+    protected readonly _pageSize = signal(this._availablePageSizes[1]); // default to page size 13 cause it fits nice
+
+    protected setStatusFilter(status: 'COMPLETED' | 'UPCOMING') {
+        this._table.getColumn('status')?.setFilterValue([status]);
+    }
 
     readonly _table = createAngularTable<Transaction>(() => ({
         data: this.TRANSACTION_DATA(),
