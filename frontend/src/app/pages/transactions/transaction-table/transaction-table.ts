@@ -6,7 +6,7 @@ import {
     lucideChevronLeft,
     lucideChevronRight,
     lucideChevronsLeft,
-    lucideChevronsRight
+    lucideChevronsRight, lucideCirclePlus
 } from '@ng-icons/lucide';
 import {BrnSelect, BrnSelectImports} from '@spartan-ng/brain/select';
 import {HlmButtonImports} from '@spartan-ng/helm/button';
@@ -39,6 +39,8 @@ import {TransactionsService} from './services/transactions-service';
 import {StatusIconCell} from './components/status-icon-cell';
 import {TableActions} from './components/table-actions';
 import {HlmLabelImports} from '@spartan-ng/helm/label';
+import {AddTransactionModal} from './components/add-transaction-modal/add-transaction-modal';
+import {HlmSheetTrigger} from '@spartan-ng/helm/sheet';
 
 @Component({
     selector: 'transaction-table',
@@ -56,8 +58,10 @@ import {HlmLabelImports} from '@spartan-ng/helm/label';
         TableActions,
         BrnSelect,
         HlmLabelImports,
+        AddTransactionModal,
+        HlmSheetTrigger,
     ],
-    providers: [provideIcons({ lucideChevronDown, lucideChevronLeft, lucideChevronsLeft, lucideChevronRight, lucideChevronsRight})],
+    providers: [provideIcons({ lucideChevronDown, lucideChevronLeft, lucideChevronsLeft, lucideChevronRight, lucideChevronsRight, lucideCirclePlus})],
     templateUrl: './transaction-table.html',
     styleUrl: './transaction-table.css',
 })

@@ -1,0 +1,37 @@
+<hlm-sheet side="right">
+
+    <button id="edit-profile" hlmSheetTrigger hlmBtn size="sm" class="hidden h-8 sm:flex">
+        <ng-icon hlm name="lucideCirclePlus" size="sm"/>
+        <span><ng-content/></span>
+    </button>
+
+    <hlm-sheet-content *hlmSheetPortal="let ctx" class="right-2 top-2 bottom-2 h-[calc(100dvh-1rem)] sm:max-w-md rounded-xl border shadow-2xl">
+        <hlm-sheet-header>
+            <h3 hlmSheetTitle>Add transaction</h3>
+            <p hlmSheetDescription>Add a transaction [either income or expense] and save it to the database.</p>
+        </hlm-sheet-header>
+
+        <div class="grid flex-1 auto-rows-min gap-6 px-4">
+            <div class="grid gap-3">
+                <label hlmLabel for="name" class="text-right">Transaction</label>
+                <input hlmInput id="name" placeholder="Transaction name" class="col-span-3"/>
+            </div>
+            <div class="grid gap-3">
+                <label hlmLabel for="amount" class="text-right">Amount</label>
+                <input hlmInput id="amount" placeholder="-230.00" class="col-span-3"/>
+            </div>
+            <div class="grid gap-3">
+                <label hlmLabel for="category" class="text-right">Category</label>
+                <input hlmInput id="category" placeholder="Utilities" class="col-span-3"/>
+            </div>
+            <div class="grid gap-3">
+                <label hlmLabel for="details" class="text-right">Details</label>
+                <input hlmInput id="details" placeholder="(optional) Add your details here" class="col-span-3"/>
+            </div>
+        </div>
+        <hlm-sheet-footer>
+            <button hlmBtn type="submit">Save</button>
+            <button hlmSheetClose hlmBtn variant="outline">Close</button>
+        </hlm-sheet-footer>
+    </hlm-sheet-content>
+</hlm-sheet>
