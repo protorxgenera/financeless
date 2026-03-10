@@ -1,16 +1,21 @@
 import {Component, inject, signal} from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideChevronDown } from '@ng-icons/lucide';
-import { BrnSelectImports } from '@spartan-ng/brain/select';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
-import { HlmInputImports } from '@spartan-ng/helm/input';
-import { HlmSelectImports } from '@spartan-ng/helm/select';
-import { HlmTableImports } from '@spartan-ng/helm/table';
-import { HlmTabsImports } from '@spartan-ng/helm/tabs';
-import {HlmMuted, hlmMuted} from '@spartan-ng/helm/typography';
+import {FormsModule} from '@angular/forms';
+import {NgIcon, provideIcons} from '@ng-icons/core';
+import {
+    lucideChevronDown,
+    lucideChevronLeft,
+    lucideChevronRight,
+    lucideChevronsLeft,
+    lucideChevronsRight
+} from '@ng-icons/lucide';
+import {BrnSelect, BrnSelectImports} from '@spartan-ng/brain/select';
+import {HlmButtonImports} from '@spartan-ng/helm/button';
+import {HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
+import {HlmIconImports} from '@spartan-ng/helm/icon';
+import {HlmSelectImports} from '@spartan-ng/helm/select';
+import {HlmTableImports} from '@spartan-ng/helm/table';
+import {HlmTabsImports} from '@spartan-ng/helm/tabs';
+import {hlmMuted} from '@spartan-ng/helm/typography';
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -21,6 +26,7 @@ import {
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    PaginationState,
     type RowSelectionState,
     type SortingState,
     type VisibilityState,
@@ -32,6 +38,7 @@ import {Transaction} from './services/transactions-model';
 import {TransactionsService} from './services/transactions-service';
 import {StatusIconCell} from './components/status-icon-cell';
 import {TableActions} from './components/table-actions';
+import {HlmLabelImports} from '@spartan-ng/helm/label';
 
 @Component({
     selector: 'transaction-table',
@@ -42,15 +49,15 @@ import {TableActions} from './components/table-actions';
         HlmButtonImports,
         NgIcon,
         HlmIconImports,
-        HlmInputImports,
         BrnSelectImports,
         HlmSelectImports,
         HlmTableImports,
         HlmTabsImports,
-        HlmMuted,
         TableActions,
+        BrnSelect,
+        HlmLabelImports,
     ],
-    providers: [provideIcons({ lucideChevronDown })],
+    providers: [provideIcons({ lucideChevronDown, lucideChevronLeft, lucideChevronsLeft, lucideChevronRight, lucideChevronsRight})],
     templateUrl: './transaction-table.html',
     styleUrl: './transaction-table.css',
 })
@@ -127,6 +134,12 @@ export class TransactionTable {
     private readonly _sorting = signal<SortingState>([]);
     private readonly _rowSelection = signal<RowSelectionState>({});
     private readonly _columnVisibility = signal<VisibilityState>({});
+    private readonly _pagination = signal<PaginationState>({
+        pageSize: 13,
+        pageIndex: 0,
+    });
+    protected readonly _availablePageSizes = [5, 10, 13, 20, 10000];
+    protected readonly _pageSize = signal(this._availablePageSizes[1]); // default to page size 10
 
     readonly _table = createAngularTable<Transaction>(() => ({
         data: this.TRANSACTION_DATA(),
@@ -137,21 +150,30 @@ export class TransactionTable {
         onColumnFiltersChange: (updater) => {
             updater instanceof Function ? this._columnFilters.update(updater) : this._columnFilters.set(updater);
         },
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: (updater) => {
             updater instanceof Function ? this._columnVisibility.update(updater) : this._columnVisibility.set(updater);
         },
         onRowSelectionChange: (updater) => {
             updater instanceof Function ? this._rowSelection.update(updater) : this._rowSelection.set(updater);
         },
+        onPaginationChange: (updater) => {
+            updater instanceof Function ? this._pagination.update(updater) : this._pagination.set(updater);
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
         state: {
             sorting: this._sorting(),
             columnFilters: this._columnFilters(),
             columnVisibility: this._columnVisibility(),
             rowSelection: this._rowSelection(),
+            pagination: this._pagination(),
+        },
+        initialState: {
+            pagination: {
+                pageSize: 13,
+            },
         },
     }));
     protected readonly _hidableColumns = this._table.getAllColumns().filter((column) => column.getCanHide());

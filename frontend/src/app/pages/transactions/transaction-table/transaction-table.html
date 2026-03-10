@@ -113,30 +113,72 @@
         }
     </div>
 
-    <div class="flex flex-col justify-between py-4 sm:flex-row sm:items-center">
-        @if (_table.getRowCount() > 0) {
-            <div [class]="hlmMuted">
-                {{ _table.getSelectedRowModel().rows.length }} of {{ _table.getRowCount() }} row(s) selected
+    <div class="mt-4 flex flex-col justify-between sm:flex-row sm:items-center">
+				<span class="text-muted-foreground text-sm">
+					{{ _table.getSelectedRowModel().rows.length }} of {{ _table.getRowCount() }} row(s) selected
+				</span>
+        <div class="mt-2 flex gap-8 sm:mt-0">
+            <div class="flex gap-2">
+                <span hlmLabel>Rows per page:</span>
+                <brn-select
+                    class="inline-block"
+                    placeholder="{{ _availablePageSizes[0] }}"
+                    [ngModel]="_table.getState().pagination.pageSize"
+                    (ngModelChange)="_table.setPageSize($event); _table.resetPageIndex()"
+                >
+                    <hlm-select-trigger size="sm" class="mr-1 inline-flex h-8 w-fit">
+                        <hlm-select-value />
+                    </hlm-select-trigger>
+                    <hlm-select-content>
+                        @for (size of _availablePageSizes; track size) {
+                            <hlm-option [value]="size">
+                                {{ size === 10000 ? 'All' : size }}
+                            </hlm-option>
+                        }
+                    </hlm-select-content>
+                </brn-select>
             </div>
-            <div class="mt-2 flex space-x-2 sm:mt-0">
+
+            <span hlmLabel>Page {{ _table.getState().pagination.pageIndex + 1 }} of {{ _table.getPageCount() }}</span>
+
+            <div class="flex space-x-1">
                 <button
-                    size="sm"
+                    size="icon-sm"
+                    variant="outline"
+                    hlmBtn
+                    [disabled]="!_table.getCanPreviousPage()"
+                    (click)="_table.firstPage()"
+                >
+                    <ng-icon hlm name="lucideChevronsLeft" size="sm" />
+                </button>
+                <button
+                    size="icon-sm"
                     variant="outline"
                     hlmBtn
                     [disabled]="!_table.getCanPreviousPage()"
                     (click)="_table.previousPage()"
                 >
-                    Previous
+                    <ng-icon hlm name="lucideChevronLeft" size="sm" />
                 </button>
-                <button size="sm" variant="outline" hlmBtn [disabled]="!_table.getCanNextPage()"
-                        (click)="_table.nextPage()">
-                    Next
+                <button
+                    size="icon-sm"
+                    variant="outline"
+                    hlmBtn
+                    [disabled]="!_table.getCanNextPage()"
+                    (click)="_table.nextPage()"
+                >
+                    <ng-icon hlm name="lucideChevronRight" size="sm" />
+                </button>
+                <button
+                    size="icon-sm"
+                    variant="outline"
+                    hlmBtn
+                    [disabled]="!_table.getCanNextPage()"
+                    (click)="_table.lastPage()"
+                >
+                    <ng-icon hlm name="lucideChevronsRight" size="sm" />
                 </button>
             </div>
-        } @else {
-            <div class="flex h-full w-full items-center justify-center">
-                <div class="text-muted-foreground text-sm">No Data</div>
-            </div>
-        }
+        </div>
     </div>
 </hlm-tabs>
