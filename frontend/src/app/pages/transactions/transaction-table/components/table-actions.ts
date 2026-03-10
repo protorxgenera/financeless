@@ -33,6 +33,7 @@ import {StatusIconPipe} from '../pipes/status-icon-pipe';
 import {TransactionStatus} from '../services/transactions-model';
 import {TransactionsService} from '../services/transactions-service';
 import {CalendarDatePickerRangeComponent} from './calendar-date-picker-range';
+import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
 
 @Component({
     selector: 'table-actions',
@@ -49,6 +50,7 @@ import {CalendarDatePickerRangeComponent} from './calendar-date-picker-range';
         HlmCheckboxImports,
         StatusIconPipe,
         CalendarDatePickerRangeComponent,
+        HlmInputGroupImports,
     ],
     providers: [
         provideIcons({
@@ -75,125 +77,134 @@ import {CalendarDatePickerRangeComponent} from './calendar-date-picker-range';
         class: 'block',
     },
     template: `
-		<div class="wip-table-search flex flex-col justify-between items-center gap-4 sm:flex-row">
-			<div class="flex flex-col justify-between gap-4 sm:flex-row">
-				<!-- TASK TITLE FILTER -->
-				<input hlmInput class="h-8 w-full md:w-80" placeholder="Search for transactions..." (input)="transactionFilterChange($event)" />
+        <div class="wip-table-search flex flex-col justify-between items-center gap-4 sm:flex-row">
+            <div class="flex flex-col justify-between gap-4 sm:flex-row">
+                <!-- TASK TITLE FILTER -->
+                <div hlmInputGroup class="h-8">
+                    <input hlmInputGroupInput class="w-full md:w-80" placeholder="Search for transactions..."
+                           (input)="transactionFilterChange($event)"/>
+                    <div hlmInputGroupAddon>
+                        <ng-icon name="lucideSearch"/>
+                    </div>
+                </div>
 
-				<!-- STATUS FILTER -->
-				<hlm-popover
-					[state]="_statusState()"
-					(stateChanged)="statusStateChanged($event)"
-					sideOffset="5"
-					closeDelay="100"
-					align="start"
-				>
-					<button hlmBtn hlmPopoverTrigger variant="outline" size="sm" class="border-dashed">
-						<ng-icon hlm name="lucideCirclePlus" class="mr-2" size="sm" />
-						Status
-						@if (_statusFilter().length) {
-							<div data-orientation="vertical" role="none" class="bg-border mx-2 h-4 w-[1px] shrink-0"></div>
+                <!-- STATUS FILTER -->
+                <hlm-popover
+                    [state]="_statusState()"
+                    (stateChanged)="statusStateChanged($event)"
+                    sideOffset="5"
+                    closeDelay="100"
+                    align="start"
+                >
+                    <button hlmBtn hlmPopoverTrigger variant="outline" size="sm" class="border-dashed">
+                        <ng-icon hlm name="lucideCirclePlus" class="mr-2" size="sm"/>
+                        Status
+                        @if (_statusFilter().length) {
+                            <div data-orientation="vertical" role="none"
+                                 class="bg-border mx-2 h-4 w-[1px] shrink-0"></div>
 
-							<div class="flex gap-1">
-								@for (status of _statusFilter(); track status) {
-									<span class="bg-secondary text-secondary-foreground rounded px-1 py-0.5 text-xs">
+                            <div class="flex gap-1">
+                                @for (status of _statusFilter(); track status) {
+                                    <span class="bg-secondary text-secondary-foreground rounded px-1 py-0.5 text-xs">
 										{{ status }}
 									</span>
-								}
-							</div>
-						}
-					</button>
-					<hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-[200px] p-0">
-						<hlm-command-input placeholder="Search Status" />
-						<hlm-command-list>
-							<div *hlmCommandEmptyState hlmCommandEmpty>No results found.</div>
-							<hlm-command-group>
-								@for (status of _statuses(); track status) {
-									<button hlm-command-item [value]="status" (selected)="statusSelected(status)">
-										<hlm-checkbox class="mr-2" [checked]="isStatusSelected(status)" />
+                                }
+                            </div>
+                        }
+                    </button>
+                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-[200px] p-0">
+                        <hlm-command-input placeholder="Search Status"/>
+                        <hlm-command-list>
+                            <div *hlmCommandEmptyState hlmCommandEmpty>No results found.</div>
+                            <hlm-command-group>
+                                @for (status of _statuses(); track status) {
+                                    <button hlm-command-item [value]="status" (selected)="statusSelected(status)">
+                                        <hlm-checkbox class="mr-2" [checked]="isStatusSelected(status)"/>
 
-										<ng-icon hlm [name]="status | statusIcon" class="text-muted-foreground mx-2" size="sm" />
-										{{ status }}
-									</button>
-								}
-							</hlm-command-group>
-						</hlm-command-list>
-					</hlm-command>
-				</hlm-popover>
+                                        <ng-icon hlm [name]="status | statusIcon" class="text-muted-foreground mx-2"
+                                                 size="sm"/>
+                                        {{ status }}
+                                    </button>
+                                }
+                            </hlm-command-group>
+                        </hlm-command-list>
+                    </hlm-command>
+                </hlm-popover>
 
-				<!-- CATEGORY FILTER -->
-				<hlm-popover
-					[state]="_categoryState()"
-					(stateChanged)="categoryStateChanged($event)"
-					sideOffset="5"
-					closeDelay="100"
-					align="start"
-				>
-					<button hlmBtn hlmPopoverTrigger variant="outline" size="sm" class="border-dashed">
-						<ng-icon hlm name="lucideCirclePlus" class="mr-2" size="sm" />
-						Category
-						@if (_categoryFilter().length) {
-							<div data-orientation="vertical" role="none" class="bg-border mx-2 h-4 w-[1px] shrink-0"></div>
+                <!-- CATEGORY FILTER -->
+                <hlm-popover
+                    [state]="_categoryState()"
+                    (stateChanged)="categoryStateChanged($event)"
+                    sideOffset="5"
+                    closeDelay="100"
+                    align="start"
+                >
+                    <button hlmBtn hlmPopoverTrigger variant="outline" size="sm" class="border-dashed">
+                        <ng-icon hlm name="lucideCirclePlus" class="mr-2" size="sm"/>
+                        Category
+                        @if (_categoryFilter().length) {
+                            <div data-orientation="vertical" role="none"
+                                 class="bg-border mx-2 h-4 w-[1px] shrink-0"></div>
 
-							<div class="flex gap-1">
-								@for (category of _categoryFilter(); track category) {
-									<span class="bg-secondary text-secondary-foreground rounded px-1 py-0.5 text-xs">
+                            <div class="flex gap-1">
+                                @for (category of _categoryFilter(); track category) {
+                                    <span class="bg-secondary text-secondary-foreground rounded px-1 py-0.5 text-xs">
 										{{ category }}
 									</span>
-								}
-							</div>
-						}
-					</button>
-					<hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-[200px] p-0">
-						<hlm-command-input placeholder="Search Category" />
-						<hlm-command-list>
-							<div *hlmCommandEmptyState hlmCommandEmpty>No results found.</div>
-							<hlm-command-group>
-								@for (category of _categories(); track category) {
-									<button hlm-command-item [value]="category" (selected)="categorySelected(category)">
-										<hlm-checkbox class="mr-2" [checked]="isCategorySelected(category)" />
-										{{ category }}
-									</button>
-								}
-							</hlm-command-group>
-						</hlm-command-list>
-					</hlm-command>
-				</hlm-popover>
+                                }
+                            </div>
+                        }
+                    </button>
+                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-[200px] p-0">
+                        <hlm-command-input placeholder="Search Category"/>
+                        <hlm-command-list>
+                            <div *hlmCommandEmptyState hlmCommandEmpty>No results found.</div>
+                            <hlm-command-group>
+                                @for (category of _categories(); track category) {
+                                    <button hlm-command-item [value]="category" (selected)="categorySelected(category)">
+                                        <hlm-checkbox class="mr-2" [checked]="isCategorySelected(category)"/>
+                                        {{ category }}
+                                    </button>
+                                }
+                            </hlm-command-group>
+                        </hlm-command-list>
+                    </hlm-command>
+                </hlm-popover>
 
-				@if (_statusFilter().length || _categoryFilter().length) {
-					<button hlmBtn variant="ghost" size="sm" align="end" (click)="resetFilters()">
-						Reset
-						<ng-icon hlm name="lucideX" class="ml-2" size="sm" />
-					</button>
-				}
-			</div>
+                @if (_statusFilter().length || _categoryFilter().length) {
+                    <button hlmBtn variant="ghost" size="sm" align="end" (click)="resetFilters()">
+                        Reset
+                        <ng-icon hlm name="lucideX" class="ml-2" size="sm"/>
+                    </button>
+                }
+            </div>
 
-			<!-- COLUMN VISIBILITY -->
-			<button hlmBtn class="h-8" variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
-				Columns
-				<ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" />
-			</button>
-			<ng-template #menu>
-				<hlm-dropdown-menu class="w-32">
-					@for (column of _hidableColumns; track column.id) {
-						<button
-							hlmDropdownMenuCheckbox
-							class="capitalize"
-							[checked]="column.getIsVisible()"
-							(triggered)="column.toggleVisibility()"
-						>
-							<hlm-dropdown-menu-checkbox-indicator />
-							{{ column.columnDef.id }}
-						</button>
-					}
-				</hlm-dropdown-menu>
-			</ng-template>
+            <!-- COLUMN VISIBILITY -->
+            <button hlmBtn class="h-8" variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
+                Columns
+                <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm"/>
+            </button>
+            <ng-template #menu>
+                <hlm-dropdown-menu class="w-32">
+                    @for (column of _hidableColumns; track column.id) {
+                        <button
+                            hlmDropdownMenuCheckbox
+                            class="capitalize"
+                            [checked]="column.getIsVisible()"
+                            (triggered)="column.toggleVisibility()"
+                        >
+                            <hlm-dropdown-menu-checkbox-indicator/>
+                            {{ column.columnDef.id }}
+                        </button>
+                    }
+                </hlm-dropdown-menu>
+            </ng-template>
 
             <!-- CALENDAR RANGE PICKER -->
             <cal-date-picker-range/>
 
-		</div>
-	`,
+        </div>
+    `,
 })
 export class TableActions {
     private readonly _tableComponent = inject(TransactionTable);
