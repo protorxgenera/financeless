@@ -1,6 +1,6 @@
 import {Routes} from '@angular/router';
 import {Dashboard} from './pages/dashboard/dashboard';
-import {Transactions} from './pages/transactions/transactions';
+import {Transactions} from './pages/transactions/transactions-page';
 import {Analytics} from './pages/analytics/analytics';
 import {Settings} from './pages/settings/settings';
 

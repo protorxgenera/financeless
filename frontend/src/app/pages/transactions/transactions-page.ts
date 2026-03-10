@@ -6,8 +6,8 @@ import {TransactionTable} from './transaction-table/transaction-table';
     imports: [
         TransactionTable
     ],
-  templateUrl: './transactions.html',
-  styleUrl: './transactions.css',
+  templateUrl: './transactions-page.html',
+  styleUrl: './transactions-page.css',
 })
 export class Transactions {
 

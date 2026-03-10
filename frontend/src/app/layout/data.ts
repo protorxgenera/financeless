@@ -12,7 +12,7 @@ export const data = {
             isActive: true,
         },
         {
-            title: 'Transactions',
+            title: 'TransactionsPage',
             url: '/transactions',
             icon: 'lucideHistory',
         },

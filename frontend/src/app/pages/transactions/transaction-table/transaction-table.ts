@@ -9,6 +9,7 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { HlmTableImports } from '@spartan-ng/helm/table';
+import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { hlmMuted } from '@spartan-ng/helm/typography';
 import {
     type ColumnDef,
@@ -24,9 +25,9 @@ import {
     type SortingState,
     type VisibilityState,
 } from '@tanstack/angular-table';
-import {ActionDropdown} from './action-dropdown/action-dropdown';
-import {TableHeadSelection, TableRowSelection} from './selection-column/selection-column';
-import {TableHeadSortButton} from './sort-header-button/sort-header-button';
+import {ActionDropdown} from './components/action-dropdown';
+import {TableHeadSelection, TableRowSelection} from './components/selection-column';
+import {TableHeadSortButton} from './components/sort-header-button';
 
 export type Payment = {
     id: string;
@@ -48,6 +49,7 @@ export type Payment = {
         BrnSelectImports,
         HlmSelectImports,
         HlmTableImports,
+        HlmTabsImports,
     ],
     providers: [provideIcons({ lucideChevronDown })],
     templateUrl: './transaction-table.html',
