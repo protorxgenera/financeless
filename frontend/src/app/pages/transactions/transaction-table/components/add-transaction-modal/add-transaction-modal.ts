@@ -116,6 +116,7 @@ export class AddTransactionModal {
     }
 
     reset() {
+        this.form.reset()
         this.selectedType.set(undefined)
     }
 
