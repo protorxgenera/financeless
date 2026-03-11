@@ -15,6 +15,7 @@ import {BrnSelect, BrnSelectImports} from '@spartan-ng/brain/select';
 import {HlmSelectImports} from '@spartan-ng/helm/select';
 import {TransactionsService} from '../../services/transactions-service';
 import {HlmDatePickerImports} from '@spartan-ng/helm/date-picker';
+import {Transaction, TransactionStatus} from '../../services/transactions-model';
 
 @Component({
     selector: 'add-transaction-modal',
@@ -114,6 +115,31 @@ export class AddTransactionModal {
             return;
         }
         console.log(this.form.value);
+
+        const { date, time } = this.form.value;
+        let isoDateTime = ''
+        if (date && time) {
+            const datePart = date.toISOString().split('T')[0]; // "yyyy-MM-dd"
+            isoDateTime = `${datePart} ${time}.000`; // ISO8601 datetime
+        }
+
+        const { amount, type } = this.form.getRawValue();
+
+        const numericAmount = Number(amount);
+        const signedAmount = type === 'income' ? numericAmount : -numericAmount;
+
+        const userTransaction: Transaction = {
+            id: Math.random().toString(),
+            date: isoDateTime,
+            name: this.form.value.name ? this.form.value.name : '',
+            amount: signedAmount,
+            category: this.form.value.category ? this.form.value.category : '',
+            transaction_status: "COMPLETED",
+            details: this.form.value.description ? this.form.value.description : '',
+        }
+
+        console.log(userTransaction)
+
     }
 
     reset() {
