@@ -108,6 +108,11 @@ export class AddTransactionModal {
 
     public selectType(type: typeof this.types[0]) {
         this.selectedType.set(type)
+        this.form.get('type')?.setValue(type.id);
+    }
+
+    isIncomeSelected(id: string): boolean {
+        return id === 'income' && this.form.get('type')?.value === 'income';
     }
 
     submit() {

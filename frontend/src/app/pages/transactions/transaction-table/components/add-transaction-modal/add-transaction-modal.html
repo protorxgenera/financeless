@@ -23,7 +23,12 @@
                             <label hlmFieldLabel>Type of transaction</label>
                             <hlm-radio-group formControlName="type" class="grid grid-cols-2 gap-4">
                                 @for (type of types; track type.id) {
-                                    <label hlmFieldLabel [for]="'type' + type.id">
+                                    <label hlmFieldLabel [for]="'type' + type.id"
+                                           class="hover:bg-accent/10 border transition-colors"
+                                           [class.bg-income!]="isIncomeSelected(type.id)"
+                                           [class.border-green-500!]="isIncomeSelected(type.id)"
+                                           [class.text-green-500!]="isIncomeSelected(type.id)"
+                                    >
                                         <hlm-field orientation="horizontal">
                                             <hlm-field-content>
                                                 <hlm-field-title>{{ type.title }}</hlm-field-title>
