@@ -1,5 +1,6 @@
 <hlm-sheet side="right">
 
+
     <button id="edit-profile" hlmSheetTrigger hlmBtn size="sm" class="hidden h-8 sm:flex">
         <ng-icon hlm name="lucideCirclePlus" size="sm"/>
         <span><ng-content/></span>
@@ -226,8 +227,38 @@
                 </button>
                 <button hlmBtn type="submit" class="flex flex-3" form="form-add-transaction">Save</button>
             </div>
-            <button hlmSheetClose hlmBtn variant="outline">Close</button>
+
+
+            <button (click)="isAlertOpen.set(true)" hlmBtn variant="outline">Close</button>
+
+            <hlm-alert-dialog [state]="isAlertOpen() ? 'open' : 'closed'">
+                <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
+                    <hlm-alert-dialog-header>
+                        <h2 hlmAlertDialogTitle>Are you absolutely sure?</h2>
+                        <p hlmAlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your account and remove your data from our
+                            servers.
+                        </p>
+                    </hlm-alert-dialog-header>
+                    <hlm-alert-dialog-footer>
+                        <button hlmAlertDialogCancel (click)="isAlertOpen.set(false)">Cancel</button>
+                        <button hlmAlertDialogAction (click)="closeSheet()">Continue</button>
+                    </hlm-alert-dialog-footer>
+                </hlm-alert-dialog-content>
+            </hlm-alert-dialog>
+
         </hlm-sheet-footer>
+
+        <button
+            hlmBtn
+            variant="ghost"
+            size="icon-sm"
+            class="absolute end-4 top-4"
+            (click)="isAlertOpen.set(true)"
+        >
+            <span class="sr-only">Close</span>
+            <ng-icon hlm size="sm" name="lucideX" />
+        </button>
 
     </hlm-sheet-content>
 </hlm-sheet>

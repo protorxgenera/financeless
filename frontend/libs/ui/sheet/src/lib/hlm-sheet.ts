@@ -17,6 +17,8 @@ import { HlmSheetOverlay } from './hlm-sheet-overlay';
             useExisting: forwardRef(() => HlmSheet),
         },
         provideBrnDialogDefaultOptions({
+            closeOnOutsidePointerEvents: false,
+            closeOnBackdropClick: false,
             // add custom options here
         }),
     ],

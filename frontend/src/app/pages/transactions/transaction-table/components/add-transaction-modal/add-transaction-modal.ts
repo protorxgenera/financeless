@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, HostListener, inject, signal, viewChild} from '@angular/core';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {lucideChevronDown, lucideCross, lucideRotateCw} from '@ng-icons/lucide';
 import {HlmSheetImports} from '@spartan-ng/helm/sheet';
@@ -17,6 +17,8 @@ import {TransactionsService} from '../../services/transactions-service';
 import {HlmDatePickerImports} from '@spartan-ng/helm/date-picker';
 import {Transaction, TransactionStatus} from '../../services/transactions-model';
 import {numericValidator} from '../../validators/numeric-validator';
+import {HlmAlertDialogImports} from '@spartan-ng/helm/alert-dialog';
+import {BrnSheet} from '@spartan-ng/brain/sheet';
 
 @Component({
     selector: 'add-transaction-modal',
@@ -35,13 +37,31 @@ import {numericValidator} from '../../validators/numeric-validator';
         BrnSelectImports,
         HlmSelectImports,
         BrnSelect,
-        HlmDatePickerImports
+        HlmDatePickerImports,
+        HlmAlertDialogImports
     ],
     providers: [provideIcons({lucideCross, lucideChevronDown, lucideRotateCw})],
     templateUrl: './add-transaction-modal.html',
     styleUrl: './add-transaction-modal.css',
 })
 export class AddTransactionModal {
+
+    public readonly sheetRef = viewChild(BrnSheet);
+    public isAlertOpen = signal(false);
+
+    @HostListener('document:mousedown', ['$event'])
+    onGlobalClick(event: MouseEvent) {
+        const target = event.target as HTMLElement;
+
+        // Check if the user clicked the overlay (usually has this attribute or class)
+        const isOverlay = target.closest('.cdk-overlay-backdrop') ||
+            target.hasAttribute('.cdk-overlay-backdrop');
+
+        if (isOverlay) {
+            this.isAlertOpen.set(true);
+        }
+    }
+
 
     private readonly _fb = inject(FormBuilder);
     private readonly now = new Date();
@@ -148,6 +168,17 @@ export class AddTransactionModal {
 
     }
 
+    closeSheet() {
+        this.isAlertOpen.set(false);
+        this.sheetRef()?.close({});
+        this.reset()
+    }
+
+    //TODO: although there are three ways that all trigger alert, there is a fourth one that doesn't: the ESC
+    // so, fix it
+
+    //TODO: add logic so that the alert only pops up when the form is dirty. If it's pristine, we don't need any alert.
+
     reset() {
         this.form.reset()
         this.selectedType.set(undefined)
@@ -155,5 +186,3 @@ export class AddTransactionModal {
 
 
 }
-
-//TODO map model to the correct Transaction type
