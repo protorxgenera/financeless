@@ -16,6 +16,7 @@ import {HlmSelectImports} from '@spartan-ng/helm/select';
 import {TransactionsService} from '../../services/transactions-service';
 import {HlmDatePickerImports} from '@spartan-ng/helm/date-picker';
 import {Transaction, TransactionStatus} from '../../services/transactions-model';
+import {numericValidator} from '../../validators/numeric-validator';
 
 @Component({
     selector: 'add-transaction-modal',
@@ -52,7 +53,7 @@ export class AddTransactionModal {
     public form = this._fb.group({
         type: ['', Validators.required],
         name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
-        amount: ['', [Validators.required]],
+        amount: ['', [Validators.required, Validators.min(0), numericValidator]],
         date: [this.now, []],
         time: [this.currentTime, []],
         currency: ['ron', []],

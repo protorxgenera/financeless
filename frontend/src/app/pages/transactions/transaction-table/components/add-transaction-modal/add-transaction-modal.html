@@ -82,7 +82,7 @@
                             } @else if (selectedType()?.id === 'expense') {
                                 -
                             } @else {
-                                {{''}}
+                                {{ '' }}
                             }
                             </span>
                             </div>
@@ -111,7 +111,13 @@
 
                         @if (form.controls.amount.touched && form.controls.amount.invalid) {
                             <hlm-field-error>
-                                Amount must be greater than zero.
+                                @if (form.controls.amount.errors?.['required']) {
+                                    Amount is required.
+                                } @else if (form.controls.amount.errors?.['notANumber']) {
+                                    Please enter a valid number (digits only).
+                                } @else if (form.controls.amount.errors?.['min']) {
+                                    Amount must be greater than zero. A minus will be added automatically if the transaction is of type Expense.
+                                }
                             </hlm-field-error>
                         }
 
@@ -201,6 +207,7 @@
                             </hlm-field-error>
                         }
                     </hlm-field>
+
                 </hlm-field-group>
             </form>
 
