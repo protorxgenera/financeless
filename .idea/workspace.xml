@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="0dd32a91-07ba-4fe7-bcb0-3fe84a14ad5b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/transactions/transaction-table/components/add-transaction-modal/add-transaction-modal.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/transactions/transaction-table/components/add-transaction-modal/add-transaction-modal.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/transactions/transaction-table/components/add-transaction-modal/add-transaction-modal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/transactions/transaction-table/components/add-transaction-modal/add-transaction-modal.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +30,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/transactions-page",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Ben/Desktop/flagship-projects/financeless",
@@ -44,8 +44,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.30387.90" />
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.31033.145" />
       </set>
     </attachedChunks>
   </component>
@@ -59,6 +59,7 @@
       <workItem from="1772881253791" duration="1052000" />
       <workItem from="1772882692750" duration="1265000" />
       <workItem from="1772884698651" duration="59000" />
+      <workItem from="1773215741353" duration="901000" />
     </task>
     <servers />
   </component>

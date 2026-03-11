@@ -1,11 +1,12 @@
 import {Component, inject, signal} from '@angular/core';
 import {NgIcon, provideIcons} from '@ng-icons/core';
-import {lucideChevronDown, lucideCross, lucideRotateCw} from '@ng-icons/lucide';
+import {lucideChevronDown, lucideCross} from '@ng-icons/lucide';
 import {HlmSheetImports} from '@spartan-ng/helm/sheet';
 import {HlmLabelImports} from '@spartan-ng/helm/label';
 import {HlmInputImports} from '@spartan-ng/helm/input';
 import {HlmButtonImports} from '@spartan-ng/helm/button';
 import {HlmIcon} from '@spartan-ng/helm/icon';
+import {HlmTextareaImports} from '@spartan-ng/helm/textarea';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
 import {HlmFieldImports} from '@spartan-ng/helm/field';
@@ -25,6 +26,7 @@ import {HlmDatePickerImports} from '@spartan-ng/helm/date-picker';
         HlmButtonImports,
         HlmIcon,
         NgIcon,
+        HlmTextareaImports,
         ReactiveFormsModule,
         HlmInputGroupImports,
         HlmFieldImports,
@@ -35,7 +37,7 @@ import {HlmDatePickerImports} from '@spartan-ng/helm/date-picker';
         BrnSelect,
         HlmDatePickerImports
     ],
-    providers: [provideIcons({lucideCross, lucideChevronDown, lucideRotateCw})],
+    providers: [provideIcons({ lucideCross, lucideChevronDown })],
     templateUrl: './add-transaction-modal.html',
     styleUrl: './add-transaction-modal.css',
 })
@@ -43,21 +45,19 @@ export class AddTransactionModal {
 
     private readonly _fb = inject(FormBuilder);
 
-    public submitted = false;
-
     private readonly service = inject(TransactionsService)
     protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
 
     public form = this._fb.group({
         type: ['', Validators.required],
-        name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
+        title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
         amount: ['', [Validators.required]],
         date: ['', []],
         time: ['', []],
         currency: ['', []],
         category: ['', []],
         description: ['', [Validators.maxLength(100)]],
-    }, {updateOn: 'submit'});
+    });
 
     public types = [
         {
@@ -102,15 +102,10 @@ export class AddTransactionModal {
 
     submit() {
         if (this.form.invalid) {
-            this.submitted = true;
             this.form.markAllAsTouched();
             return;
         }
         console.log(this.form.value);
-    }
-
-    reset() {
-        this.submitted = false;
     }
 
 

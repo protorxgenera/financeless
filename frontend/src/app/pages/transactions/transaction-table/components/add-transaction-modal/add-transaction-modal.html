@@ -5,33 +5,201 @@
         <span><ng-content/></span>
     </button>
 
-    <hlm-sheet-content *hlmSheetPortal="let ctx" class="right-2 top-2 bottom-2 h-[calc(100dvh-1rem)] sm:max-w-md rounded-xl border shadow-2xl">
+    <hlm-sheet-content *hlmSheetPortal="let ctx"
+                       class="right-2 top-2 bottom-2 h-[calc(100dvh-1rem)] sm:max-w-md rounded-xl border shadow-2xl overflow-auto no-scrollbar">
         <hlm-sheet-header>
             <h3 hlmSheetTitle>Add transaction</h3>
             <p hlmSheetDescription>Add a transaction [either income or expense] and save it to the database.</p>
         </hlm-sheet-header>
 
         <div class="grid flex-1 auto-rows-min gap-6 px-4">
-            <div class="grid gap-3">
-                <label hlmLabel for="name" class="text-right">Transaction</label>
-                <input hlmInput id="name" placeholder="Transaction name" class="col-span-3"/>
-            </div>
-            <div class="grid gap-3">
-                <label hlmLabel for="amount" class="text-right">Amount</label>
-                <input hlmInput id="amount" placeholder="-230.00" class="col-span-3"/>
-            </div>
-            <div class="grid gap-3">
-                <label hlmLabel for="category" class="text-right">Category</label>
-                <input hlmInput id="category" placeholder="Utilities" class="col-span-3"/>
-            </div>
-            <div class="grid gap-3">
-                <label hlmLabel for="details" class="text-right">Details</label>
-                <input hlmInput id="details" placeholder="(optional) Add your details here" class="col-span-3"/>
-            </div>
+
+            <form id="form-add-transaction" [formGroup]="form" (ngSubmit)="submit()">
+                <hlm-field-group>
+
+                    <!-- type (income | expense) -->
+                    <hlm-field-group>
+                        <fieldset hlmFieldSet>
+                            <label hlmFieldLabel>Type of transaction</label>
+                            <hlm-radio-group formControlName="type" class="grid grid-cols-2 gap-4">
+                                @for (type of types; track type.id) {
+                                    <label hlmFieldLabel [for]="'type-' + type.id">
+                                        <hlm-field orientation="horizontal">
+                                            <hlm-field-content>
+                                                <hlm-field-title>{{ type.title }}</hlm-field-title>
+                                                <!-- <hlm-field-description>{{ type.description }}</hlm-field-description> -->
+                                            </hlm-field-content>
+                                            <hlm-radio [value]="type.id" [id]="'type-' + type.id">
+                                                <hlm-radio-indicator indicator/>
+                                            </hlm-radio>
+                                        </hlm-field>
+                                    </label>
+                                }
+                            </hlm-radio-group>
+                            @if (form.controls.type.touched && form.controls.type.invalid) {
+                                <hlm-field-error>You must select a transaction type to continue.</hlm-field-error>
+                            }
+                        </fieldset>
+                    </hlm-field-group>
+
+                    <!-- name -->
+                    <hlm-field>
+                        <label hlmFieldLabel for="name">Transaction</label>
+                        <input
+                            hlmInput
+                            id="name"
+                            placeholder="Transaction name"
+                            autoComplete="off"
+                            formControlName="name"
+                        />
+                        @if (form.controls.name.touched && form.controls.name.invalid) {
+                            <hlm-field-error>
+                                @if (form.controls.name.errors?.['required'] || form.controls.name.errors?.['minlength']) {
+                                    Title must be at least 3 characters.
+                                }
+                                @if (form.controls.name.errors?.['maxlength']) {
+                                    Title cannot exceed 32 characters.
+                                }
+                            </hlm-field-error>
+                        }
+                    </hlm-field>
+
+                    <!-- amount -->
+                    <hlm-field>
+
+                        <label hlmFieldLabel for="amount">Amount</label>
+                        <div hlmInputGroup>
+                            <div hlmInputGroupAddon>
+                                <span hlmInputGroupText>{{ selectedCurrency().icon }}</span>
+                            </div>
+
+                            <input
+                                hlmInputGroupInput
+                                id="amount"
+                                placeholder="-200.00"
+                                autoComplete="off"
+                                formControlName="amount"
+                            />
+
+                            <div hlmInputGroupAddon align="inline-end">
+                                <button
+                                    hlmInputGroupButton
+                                    variant="ghost"
+                                    class="pr-1.5! text-xs"
+                                    [hlmDropdownMenuTrigger]="searchMenu"
+                                    align="end"
+                                >
+                                    {{ selectedCurrency().title }}
+                                    <ng-icon name="lucideChevronDown"/>
+                                </button>
+                            </div>
+                        </div>
+
+                        @if (form.controls.amount.touched && form.controls.amount.invalid) {
+                            <hlm-field-error>
+                                Amount must be greater than zero.
+                            </hlm-field-error>
+                        }
+
+                        <ng-template #searchMenu>
+                            <hlm-dropdown-menu class="w-56 [--radius:0.95rem]">
+                                @for (currency of currencies; track currency.id) {
+                                    <button hlmDropdownMenuItem
+                                            (triggered)="selectCurrency(currency)"
+                                    >{{ currency.title }}
+                                    </button>
+                                }
+                            </hlm-dropdown-menu>
+                        </ng-template>
+                    </hlm-field>
+
+                    <!-- datetime -->
+                    <hlm-field-group>
+                        <fieldset hlmFieldSet>
+                            <div class="grid grid-cols-2 gap-4 w-full">
+                                <div class="flex flex-col gap-3">
+                                    <label for="date-picker" hlmLabel>Date</label>
+                                    <hlm-date-picker
+                                        class="w-full"
+                                        formControlName="date"
+                                        [autoCloseOnSelect]="true"
+                                        buttonId="date-picker"
+                                        [min]="minDate"
+                                        [max]="maxDate">
+                                        <span>Select date</span>
+                                    </hlm-date-picker>
+                                </div>
+
+                                <div class="flex flex-col gap-3">
+                                    <label for="time-picker" hlmLabel>Time</label>
+                                    <input
+                                        hlmInput
+                                        [defaultValue]="'10:30:00'"
+                                        formControlName="time"
+                                        id="time-picker"
+                                        type="time"
+                                        step="1"
+                                        class="w-full bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                    />
+                                </div>
+                            </div>
+                        </fieldset>
+                    </hlm-field-group>
+
+                    <!-- category -->
+                    <hlm-field>
+                        <label hlmFieldLabel for="category">Category</label>
+                        <brn-select class="inline-block" id="category" formControlName="category" placeholder="Select">
+                            <hlm-select-trigger class="w-full">
+                                <hlm-select-value/>
+                            </hlm-select-trigger>
+                            <hlm-select-content>
+                                <hlm-option value="auto">None</hlm-option>
+                                <div hlmSelectSeparator class="mx-0 w-full"></div>
+                                @for (category of categories; track category) {
+                                    <hlm-option [value]="category">{{ category }}</hlm-option>
+                                }
+                            </hlm-select-content>
+                        </brn-select>
+                    </hlm-field>
+
+                    <!-- description -->
+                    <hlm-field>
+                        <label hlmFieldLabel for="description">Description</label>
+                        <hlm-input-group>
+								<textarea
+                                    hlmInputGroupTextarea
+                                    id="description"
+                                    class="min-h-24"
+                                    placeholder="Add transaction details here (optional)"
+                                    rows="6"
+                                    formControlName="description"
+                                ></textarea>
+                            <hlm-input-group-addon align="block-end">
+                                <span
+                                    hlmInputGroupText>{{ form.controls.description.value?.length || 0 }}/100 characters</span>
+                            </hlm-input-group-addon>
+                        </hlm-input-group>
+                        @if (form.controls.description.touched && form.controls.description.invalid) {
+                            <hlm-field-error>
+                                @if (form.controls.description.errors?.['maxlength']) {
+                                    Description cannot exceed 100 characters.
+                                }
+                            </hlm-field-error>
+                        }
+                    </hlm-field>
+                </hlm-field-group>
+            </form>
+
         </div>
+
         <hlm-sheet-footer>
-            <button hlmBtn type="submit">Save</button>
+            <div class="flex gap-2">
+                <button hlmBtn class="flex flex-1" variant="outline" type="button" (click)="form.reset()"><ng-icon name="lucideRotateCw" />Reset</button>
+                <button hlmBtn type="submit" class="flex flex-3" form="form-add-transaction">Save</button>
+            </div>
             <button hlmSheetClose hlmBtn variant="outline">Close</button>
         </hlm-sheet-footer>
+
     </hlm-sheet-content>
 </hlm-sheet>
