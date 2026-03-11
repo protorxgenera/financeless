@@ -42,6 +42,8 @@ import {HlmDatePickerImports} from '@spartan-ng/helm/date-picker';
 export class AddTransactionModal {
 
     private readonly _fb = inject(FormBuilder);
+    private readonly now = new Date();
+    private readonly currentTime = this.now.toTimeString().split(' ')[0];
 
     private readonly service = inject(TransactionsService)
     protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
@@ -50,9 +52,9 @@ export class AddTransactionModal {
         type: ['', Validators.required],
         name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
         amount: ['', [Validators.required]],
-        date: ['', []],
-        time: ['', []],
-        currency: ['', []],
+        date: [this.now, []],
+        time: [this.currentTime, []],
+        currency: ['ron', []],
         category: ['', []],
         description: ['', [Validators.maxLength(100)]],
     }, {updateOn: 'submit'});
@@ -104,7 +106,6 @@ export class AddTransactionModal {
 
     public selectType(type: typeof this.types[0]) {
         this.selectedType.set(type)
-        console.log(this.selectedType());
     }
 
     submit() {
@@ -123,6 +124,4 @@ export class AddTransactionModal {
 
 }
 
-//TODO continue building the AddTransactionForm inside the modal
-// for the status (and maybe income/expense too) you can use the radio buttons that look hot in spartan:
-// https://spartan.ng/components/radio-group
+//TODO map model to the correct Transaction type
