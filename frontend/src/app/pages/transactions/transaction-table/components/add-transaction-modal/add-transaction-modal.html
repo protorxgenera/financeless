@@ -23,13 +23,14 @@
                             <label hlmFieldLabel>Type of transaction</label>
                             <hlm-radio-group formControlName="type" class="grid grid-cols-2 gap-4">
                                 @for (type of types; track type.id) {
-                                    <label hlmFieldLabel [for]="'type-' + type.id">
+                                    <label hlmFieldLabel [for]="'type' + type.id">
                                         <hlm-field orientation="horizontal">
                                             <hlm-field-content>
                                                 <hlm-field-title>{{ type.title }}</hlm-field-title>
                                                 <!-- <hlm-field-description>{{ type.description }}</hlm-field-description> -->
                                             </hlm-field-content>
-                                            <hlm-radio [value]="type.id" [id]="'type-' + type.id">
+                                            <hlm-radio (change)="selectType(type)" [value]="type.id"
+                                                       [id]="'type' + type.id">
                                                 <hlm-radio-indicator indicator/>
                                             </hlm-radio>
                                         </hlm-field>
@@ -70,13 +71,26 @@
                         <label hlmFieldLabel for="amount">Amount</label>
                         <div hlmInputGroup>
                             <div hlmInputGroupAddon>
-                                <span hlmInputGroupText>{{ selectedCurrency().icon }}</span>
+                                <span hlmInputGroupText>{{ selectedCurrency().icon }}
+                                </span>
+                            </div>
+
+                            <div hlmInputGroupAddon>
+                                <span hlmInputGroupText>
+                            @if (selectedType()?.id === 'income') {
+                                +
+                            } @else if (selectedType()?.id === 'expense') {
+                                -
+                            } @else {
+                                {{''}}
+                            }
+                            </span>
                             </div>
 
                             <input
                                 hlmInputGroupInput
                                 id="amount"
-                                placeholder="-200.00"
+                                placeholder="200.00"
                                 autoComplete="off"
                                 formControlName="amount"
                             />
@@ -195,7 +209,10 @@
 
         <hlm-sheet-footer>
             <div class="flex gap-2">
-                <button hlmBtn class="flex flex-1" variant="outline" type="button" (click)="form.reset()"><ng-icon name="lucideRotateCw" />Reset</button>
+                <button hlmBtn class="flex flex-1" variant="outline" type="button" (click)="form.reset()">
+                    <ng-icon name="lucideRotateCw"/>
+                    Reset
+                </button>
                 <button hlmBtn type="submit" class="flex flex-3" form="form-add-transaction">Save</button>
             </div>
             <button hlmSheetClose hlmBtn variant="outline">Close</button>

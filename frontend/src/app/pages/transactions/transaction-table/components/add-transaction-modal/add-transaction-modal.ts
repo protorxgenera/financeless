@@ -43,8 +43,6 @@ export class AddTransactionModal {
 
     private readonly _fb = inject(FormBuilder);
 
-    public submitted = false;
-
     private readonly service = inject(TransactionsService)
     protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
 
@@ -59,6 +57,8 @@ export class AddTransactionModal {
         description: ['', [Validators.maxLength(100)]],
     }, {updateOn: 'submit'});
 
+
+
     public types = [
         {
             id: 'income',
@@ -70,7 +70,9 @@ export class AddTransactionModal {
             title: 'Expense',
             description: 'Piure fara carnita :(',
         },
-    ];
+    ]
+
+    selectedType = signal<typeof this.types[0] | undefined>(undefined)
 
     public currencies = [
         {
@@ -100,9 +102,13 @@ export class AddTransactionModal {
         this.form.get('currency')?.setValue(currency.id);
     }
 
+    public selectType(type: typeof this.types[0]) {
+        this.selectedType.set(type)
+        console.log(this.selectedType());
+    }
+
     submit() {
         if (this.form.invalid) {
-            this.submitted = true;
             this.form.markAllAsTouched();
             return;
         }
@@ -110,7 +116,7 @@ export class AddTransactionModal {
     }
 
     reset() {
-        this.submitted = false;
+        this.selectedType.set(undefined)
     }
 
 
