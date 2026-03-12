@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
-import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { HlmToasterImports } from '@spartan-ng/helm/sonner';
-import { toast } from 'ngx-sonner';
+import {Component} from '@angular/core';
+import {HlmToasterImports} from '@spartan-ng/helm/sonner';
+import {toast} from 'ngx-sonner';
+
+//TODO cleanup needed af
 
 @Component({
     selector: 'submit-sonner',
-    imports: [HlmToasterImports, HlmButtonImports],
+    imports: [HlmToasterImports],
     template: `
-		<hlm-toaster />
-		<button hlmBtn variant="outline" (click)="showToast()">Show Toast</button>
-	`,
+        <hlm-toaster/>
+        <!-- <button hlmBtn variant="outline" (click)="showToast()">Show Toast</button> -->
+    `,
 })
 export class SuccessSonner {
     showToast() {

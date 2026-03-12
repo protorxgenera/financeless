@@ -20,6 +20,7 @@ import {numericValidator} from '../../validators/numeric-validator';
 import {HlmAlertDialogImports} from '@spartan-ng/helm/alert-dialog';
 import {BrnSheet, BrnSheetImports} from '@spartan-ng/brain/sheet';
 import {toast} from 'ngx-sonner';
+import {SuccessSonner} from './submit-sonner/submit-sonner';
 
 @Component({
     selector: 'add-transaction-modal',
@@ -41,6 +42,7 @@ import {toast} from 'ngx-sonner';
         BrnSelect,
         HlmDatePickerImports,
         HlmAlertDialogImports,
+        SuccessSonner,
     ],
     providers: [provideIcons({lucideCross, lucideChevronDown, lucideRotateCw, lucideCalendar1})],
     templateUrl: './add-transaction-modal.html',
@@ -178,7 +180,7 @@ export class AddTransactionModal {
         this.reset();
         this.closeSheet(ctx)
         toast.success('Transaction Recorded', {
-            description: `${userTransaction.name} for ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Math.abs(signedAmount))} has been added.`,
+            description: `${userTransaction.name} for ${new Intl.NumberFormat('en-US', { style: 'currency', currency: this.selectedCurrency().title }).format(Math.abs(signedAmount))} has been added.`,
         });
 
     }
@@ -194,7 +196,7 @@ export class AddTransactionModal {
 
     closeSheet(ctx: any) {
         ctx.close();
-        // this.sheetRef()?.close({});
+        this.sheetRef()?.close({});
         this.reset()
     }
 
