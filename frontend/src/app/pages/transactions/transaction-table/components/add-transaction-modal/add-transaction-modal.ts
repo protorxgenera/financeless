@@ -1,4 +1,4 @@
-import {Component, HostListener, inject, signal, viewChild} from '@angular/core';
+import {Component, inject, signal, viewChild} from '@angular/core';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {lucideCalendar1, lucideChevronDown, lucideCross, lucideRotateCw} from '@ng-icons/lucide';
 import {HlmSheetImports} from '@spartan-ng/helm/sheet';
@@ -15,12 +15,11 @@ import {BrnSelect, BrnSelectImports} from '@spartan-ng/brain/select';
 import {HlmSelectImports} from '@spartan-ng/helm/select';
 import {TransactionsService} from '../../services/transactions-service';
 import {HlmDatePickerImports} from '@spartan-ng/helm/date-picker';
-import {Transaction, TransactionStatus} from '../../services/transactions-model';
+import {Transaction} from '../../services/transactions-model';
 import {numericValidator} from '../../validators/numeric-validator';
 import {HlmAlertDialogImports} from '@spartan-ng/helm/alert-dialog';
-import {BrnSheet} from '@spartan-ng/brain/sheet';
-import {HlmComboboxImports} from '@spartan-ng/helm/combobox';
-import {HlmTooltipImports} from '@spartan-ng/helm/tooltip';
+import {BrnSheet, BrnSheetImports} from '@spartan-ng/brain/sheet';
+import {toast} from 'ngx-sonner';
 
 @Component({
     selector: 'add-transaction-modal',
@@ -37,12 +36,11 @@ import {HlmTooltipImports} from '@spartan-ng/helm/tooltip';
         HlmRadioGroupImports,
         HlmDropdownMenuImports,
         BrnSelectImports,
+        BrnSheetImports,
         HlmSelectImports,
         BrnSelect,
         HlmDatePickerImports,
         HlmAlertDialogImports,
-        HlmComboboxImports,
-        HlmTooltipImports
     ],
     providers: [provideIcons({lucideCross, lucideChevronDown, lucideRotateCw, lucideCalendar1})],
     templateUrl: './add-transaction-modal.html',
@@ -146,7 +144,7 @@ export class AddTransactionModal {
         return id === 'income' && this.form.get('type')?.value === 'income';
     }
 
-    submit() {
+    submit(ctx: any) {
         if (this.form.invalid) {
             this.form.markAllAsTouched();
             return;
@@ -176,6 +174,12 @@ export class AddTransactionModal {
         }
 
         console.log(userTransaction)
+        this.form.markAsPristine();
+        this.reset();
+        this.closeSheet(ctx)
+        toast.success('Transaction Recorded', {
+            description: `${userTransaction.name} for ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(Math.abs(signedAmount))} has been added.`,
+        });
 
     }
 
@@ -190,7 +194,7 @@ export class AddTransactionModal {
 
     closeSheet(ctx: any) {
         ctx.close();
-        this.sheetRef()?.close({});
+        // this.sheetRef()?.close({});
         this.reset()
     }
 

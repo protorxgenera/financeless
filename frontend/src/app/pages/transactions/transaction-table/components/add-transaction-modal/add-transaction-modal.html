@@ -1,4 +1,4 @@
-<hlm-sheet side="right">
+<hlm-sheet side="right" >
 
 
     <button id="edit-profile" hlmSheetTrigger hlmBtn size="sm" class="hidden h-8 sm:flex">
@@ -15,7 +15,7 @@
 
         <div class="grid flex-1 auto-rows-min gap-6 px-4">
 
-            <form id="form-add-transaction" [formGroup]="form" (ngSubmit)="submit()">
+            <form id="form-add-transaction" [formGroup]="form" (ngSubmit)="submit(ctx)">
                 <hlm-field-group>
 
                     <!-- type (income | expense) -->
@@ -236,7 +236,7 @@
                     <ng-icon name="lucideRotateCw"/>
                     Reset
                 </button>
-                <button hlmBtn type="submit" class="flex flex-3" form="form-add-transaction">Save</button>
+                <button hlmBtn class="flex flex-3" form="form-add-transaction" (click)="submit(ctx)">Save</button>
             </div>
 
 
