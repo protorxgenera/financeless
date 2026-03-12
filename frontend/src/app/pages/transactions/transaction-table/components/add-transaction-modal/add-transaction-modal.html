@@ -173,6 +173,10 @@
 
                     <!-- category -->
                     <hlm-field>
+
+                        <!-- think about switching from a selectComponent to a comboboxComponent for additional features -->
+                        <!-- like search and no-results-template (for a possible add-new-category button) -->
+                        <!-- the problem with the combobox is that it doesn't animate on open and close. -->
                         <label hlmFieldLabel for="category">Category</label>
                         <brn-select class="inline-block" id="category" formControlName="category" placeholder="Select">
                             <hlm-select-trigger class="w-full">

@@ -19,6 +19,7 @@ import {Transaction, TransactionStatus} from '../../services/transactions-model'
 import {numericValidator} from '../../validators/numeric-validator';
 import {HlmAlertDialogImports} from '@spartan-ng/helm/alert-dialog';
 import {BrnSheet} from '@spartan-ng/brain/sheet';
+import {HlmComboboxImports} from '@spartan-ng/helm/combobox';
 
 @Component({
     selector: 'add-transaction-modal',
@@ -38,7 +39,8 @@ import {BrnSheet} from '@spartan-ng/brain/sheet';
         HlmSelectImports,
         BrnSelect,
         HlmDatePickerImports,
-        HlmAlertDialogImports
+        HlmAlertDialogImports,
+        HlmComboboxImports
     ],
     providers: [provideIcons({lucideCross, lucideChevronDown, lucideRotateCw})],
     templateUrl: './add-transaction-modal.html',
@@ -53,9 +55,13 @@ export class AddTransactionModal {
     onGlobalClick(event: MouseEvent) {
         const target = event.target as HTMLElement;
 
-        // Check if the user clicked the overlay (usually has this attribute or class)
-        const isOverlay = target.closest('.cdk-overlay-backdrop') ||
-            target.hasAttribute('.cdk-overlay-backdrop');
+        const backdrops = document.querySelectorAll('.cdk-overlay-backdrop');
+
+        if (backdrops.length > 1) {
+            return;
+        }
+
+        const isOverlay = target.classList.contains('cdk-overlay-backdrop');
 
         if (isOverlay) {
             this.isAlertOpen.set(true);
@@ -80,7 +86,6 @@ export class AddTransactionModal {
         category: ['', []],
         description: ['', [Validators.maxLength(100)]],
     }, {updateOn: 'submit'});
-
 
 
     public types = [
@@ -142,14 +147,14 @@ export class AddTransactionModal {
         }
         console.log(this.form.value);
 
-        const { date, time } = this.form.value;
+        const {date, time} = this.form.value;
         let isoDateTime = ''
         if (date && time) {
             const datePart = date.toISOString().split('T')[0]; // "yyyy-MM-dd"
             isoDateTime = `${datePart} ${time}.000`; // ISO8601 datetime
         }
 
-        const { amount, type } = this.form.getRawValue();
+        const {amount, type} = this.form.getRawValue();
 
         const numericAmount = Number(amount);
         const signedAmount = type === 'income' ? numericAmount : -numericAmount;
