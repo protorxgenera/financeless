@@ -200,11 +200,14 @@ export class AddTransactionModal {
     //TODO: add logic so that the alert only pops up when the form is dirty. If it's pristine, we don't need any alert.
 
     reset() {
+        this.selectedCurrency.set(this.currencies[0])
+        this.selectedType.set(undefined)
         this.form.reset({
             date: this.now,
             time: this.currentTime,
+            currency: this.selectedCurrency().id
         });
-        this.selectedType.set(undefined)
+
     }
 
 
