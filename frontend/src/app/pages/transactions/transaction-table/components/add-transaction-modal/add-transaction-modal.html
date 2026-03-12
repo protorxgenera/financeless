@@ -158,7 +158,7 @@
 
                                 <div class="flex flex-col gap-3">
                                     <label for="time-picker" hlmLabel>Time</label>
-                                    <input
+                                    <div class="flex gap-3"><input
                                         hlmInput
                                         formControlName="time"
                                         id="time-picker"
@@ -166,7 +166,14 @@
                                         step="1"
                                         class="w-full bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                                     />
+                                        <button hlmBtn type="button"
+                                                variant="outline"
+                                                (click)="setToNow()">
+                                            <ng-icon hlm name="lucideCalendar1" size="sm"/>
+                                        </button>
+                                    </div>
                                 </div>
+
                             </div>
                         </fieldset>
                     </hlm-field-group>
@@ -245,7 +252,7 @@
             [hlmAlertDialogTriggerFor]="myAlert"
         >
             <span class="sr-only">Close</span>
-            <ng-icon hlm size="sm" name="lucideX" />
+            <ng-icon hlm size="sm" name="lucideX"/>
         </button>
 
     </hlm-sheet-content>

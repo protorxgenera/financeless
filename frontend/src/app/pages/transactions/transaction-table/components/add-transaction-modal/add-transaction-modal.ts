@@ -1,6 +1,6 @@
 import {Component, HostListener, inject, signal, viewChild} from '@angular/core';
 import {NgIcon, provideIcons} from '@ng-icons/core';
-import {lucideChevronDown, lucideCross, lucideRotateCw} from '@ng-icons/lucide';
+import {lucideCalendar1, lucideChevronDown, lucideCross, lucideRotateCw} from '@ng-icons/lucide';
 import {HlmSheetImports} from '@spartan-ng/helm/sheet';
 import {HlmLabelImports} from '@spartan-ng/helm/label';
 import {HlmInputImports} from '@spartan-ng/helm/input';
@@ -20,6 +20,7 @@ import {numericValidator} from '../../validators/numeric-validator';
 import {HlmAlertDialogImports} from '@spartan-ng/helm/alert-dialog';
 import {BrnSheet} from '@spartan-ng/brain/sheet';
 import {HlmComboboxImports} from '@spartan-ng/helm/combobox';
+import {HlmTooltipImports} from '@spartan-ng/helm/tooltip';
 
 @Component({
     selector: 'add-transaction-modal',
@@ -40,9 +41,10 @@ import {HlmComboboxImports} from '@spartan-ng/helm/combobox';
         BrnSelect,
         HlmDatePickerImports,
         HlmAlertDialogImports,
-        HlmComboboxImports
+        HlmComboboxImports,
+        HlmTooltipImports
     ],
-    providers: [provideIcons({lucideCross, lucideChevronDown, lucideRotateCw})],
+    providers: [provideIcons({lucideCross, lucideChevronDown, lucideRotateCw, lucideCalendar1})],
     templateUrl: './add-transaction-modal.html',
     styleUrl: './add-transaction-modal.css',
 })
@@ -177,6 +179,15 @@ export class AddTransactionModal {
 
     }
 
+    setToNow() {
+        const now = new Date();
+        const currentTime = now.toTimeString().split(' ')[0];
+        this.form.patchValue({
+            date: now,
+            time: currentTime
+        });
+    }
+
     closeSheet(ctx: any) {
         ctx.close();
         this.sheetRef()?.close({});
@@ -189,7 +200,10 @@ export class AddTransactionModal {
     //TODO: add logic so that the alert only pops up when the form is dirty. If it's pristine, we don't need any alert.
 
     reset() {
-        this.form.reset()
+        this.form.reset({
+            date: this.now,
+            time: this.currentTime,
+        });
         this.selectedType.set(undefined)
     }
 
