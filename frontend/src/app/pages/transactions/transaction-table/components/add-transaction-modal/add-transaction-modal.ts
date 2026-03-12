@@ -49,24 +49,28 @@ import {HlmComboboxImports} from '@spartan-ng/helm/combobox';
 export class AddTransactionModal {
 
     public readonly sheetRef = viewChild(BrnSheet);
-    public isAlertOpen = signal(false);
 
-    @HostListener('document:mousedown', ['$event'])
-    onGlobalClick(event: MouseEvent) {
-        const target = event.target as HTMLElement;
+    //TODO I reverted back the logic for the ESC button so that I can take care of the animation.
+    // I should revisit this in the future
 
-        const backdrops = document.querySelectorAll('.cdk-overlay-backdrop');
-
-        if (backdrops.length > 1) {
-            return;
-        }
-
-        const isOverlay = target.classList.contains('cdk-overlay-backdrop');
-
-        if (isOverlay) {
-            this.isAlertOpen.set(true);
-        }
-    }
+    // public isAlertOpen = signal(false);
+    //
+    // @HostListener('document:mousedown', ['$event'])
+    // onGlobalClick(event: MouseEvent) {
+    //     const target = event.target as HTMLElement;
+    //
+    //     const backdrops = document.querySelectorAll('.cdk-overlay-backdrop');
+    //
+    //     if (backdrops.length > 1) {
+    //         return;
+    //     }
+    //
+    //     const isOverlay = target.classList.contains('cdk-overlay-backdrop');
+    //
+    //     if (isOverlay) {
+    //         this.isAlertOpen.set(true);
+    //     }
+    // }
 
 
     private readonly _fb = inject(FormBuilder);
@@ -173,8 +177,8 @@ export class AddTransactionModal {
 
     }
 
-    closeSheet() {
-        this.isAlertOpen.set(false);
+    closeSheet(ctx: any) {
+        ctx.close();
         this.sheetRef()?.close({});
         this.reset()
     }

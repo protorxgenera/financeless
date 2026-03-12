@@ -233,23 +233,7 @@
             </div>
 
 
-            <button (click)="isAlertOpen.set(true)" hlmBtn variant="outline">Close</button>
-
-            <hlm-alert-dialog [state]="isAlertOpen() ? 'open' : 'closed'">
-                <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
-                    <hlm-alert-dialog-header>
-                        <h2 hlmAlertDialogTitle>Are you absolutely sure?</h2>
-                        <p hlmAlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your account and remove your data from our
-                            servers.
-                        </p>
-                    </hlm-alert-dialog-header>
-                    <hlm-alert-dialog-footer>
-                        <button hlmAlertDialogCancel (click)="isAlertOpen.set(false)">Cancel</button>
-                        <button hlmAlertDialogAction (click)="closeSheet()">Continue</button>
-                    </hlm-alert-dialog-footer>
-                </hlm-alert-dialog-content>
-            </hlm-alert-dialog>
+            <button [hlmAlertDialogTriggerFor]="myAlert" hlmBtn variant="outline">Close</button>
 
         </hlm-sheet-footer>
 
@@ -258,7 +242,7 @@
             variant="ghost"
             size="icon-sm"
             class="absolute end-4 top-4"
-            (click)="isAlertOpen.set(true)"
+            [hlmAlertDialogTriggerFor]="myAlert"
         >
             <span class="sr-only">Close</span>
             <ng-icon hlm size="sm" name="lucideX" />
@@ -266,3 +250,19 @@
 
     </hlm-sheet-content>
 </hlm-sheet>
+
+<hlm-alert-dialog #myAlert>
+    <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
+        <hlm-alert-dialog-header>
+            <h2 hlmAlertDialogTitle>Are you absolutely sure?</h2>
+            <p hlmAlertDialogDescription>
+                This action cannot be undone. This will permanently delete your account and remove your data from our
+                servers.
+            </p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+            <button hlmAlertDialogCancel (click)="ctx.close()">Cancel</button>
+            <button hlmAlertDialogAction (click)="closeSheet(ctx)">Continue</button>
+        </hlm-alert-dialog-footer>
+    </hlm-alert-dialog-content>
+</hlm-alert-dialog>
