@@ -178,6 +178,8 @@ export class AddTransactionModal {
             details: this.form.value.description ? this.form.value.description : '',
         }
 
+        this.service.addTransaction(userTransaction)
+
         console.log(userTransaction)
         this.form.markAsPristine();
         this.reset();

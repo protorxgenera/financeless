@@ -50,4 +50,10 @@ export class TransactionsService {
     getTransactions() {
         return this.transactionsData.asReadonly();
     }
+
+    addTransaction(transaction: Transaction) {
+        this.transactionsData.update(
+            (data) => { return [...data, transaction] }
+    )
+    }
 }
