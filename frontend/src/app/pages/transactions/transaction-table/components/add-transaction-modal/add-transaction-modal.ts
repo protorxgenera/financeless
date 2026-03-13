@@ -169,7 +169,7 @@ export class AddTransactionModal {
         const signedAmount = type === 'income' ? numericAmount : -numericAmount;
 
         const userTransaction: Transaction = {
-            id: Math.random().toString(),
+            id: crypto.randomUUID(),
             date: isoDateTime,
             name: this.form.value.name ? this.form.value.name : '',
             amount: signedAmount,
