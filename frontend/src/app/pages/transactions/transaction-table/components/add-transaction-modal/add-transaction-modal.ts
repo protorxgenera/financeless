@@ -83,15 +83,18 @@ export class AddTransactionModal {
     protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
 
     public form = this._fb.group({
-        type: ['', Validators.required],
-        name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
-        amount: ['', [Validators.required, Validators.min(0), numericValidator]],
+        type: ['', {validators: Validators.required, updateOn: 'submit'}],
+        name: ['', {
+            validators: [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
+            updateOn: 'submit'
+        }],
+        amount: ['', {validators: [Validators.required, Validators.min(0), numericValidator], updateOn: 'submit'}],
         date: [this.now, []],
         time: [this.currentTime, []],
         currency: ['ron', []],
         category: ['', []],
         description: ['', [Validators.maxLength(100)]],
-    }, {updateOn: 'submit'});
+    });
 
 
     public types = [
@@ -180,7 +183,10 @@ export class AddTransactionModal {
         this.reset();
         this.closeSheet(ctx)
         toast.success('Transaction Recorded', {
-            description: `${userTransaction.name} for ${new Intl.NumberFormat('en-US', { style: 'currency', currency: this.selectedCurrency().title }).format(Math.abs(signedAmount))} has been added.`,
+            description: `${userTransaction.name} for ${new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: this.selectedCurrency().title
+            }).format(Math.abs(signedAmount))} has been added.`,
         });
 
     }
