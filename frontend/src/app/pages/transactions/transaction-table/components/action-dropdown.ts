@@ -2,7 +2,7 @@ import {Component, inject} from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideEllipsis } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
+import {HlmDropdownMenuConfig, HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
 import {Transaction} from '../services/transactions-model';
@@ -17,7 +17,7 @@ import {SuccessSonner} from './add-transaction-modal/submit-sonner/submit-sonner
     imports: [HlmButtonImports, NgIcon, HlmIconImports, HlmDropdownMenuImports, HlmToaster, SuccessSonner],
     providers: [provideIcons({ lucideEllipsis })],
     template: `
-		<button hlmBtn variant="ghost" class="h-8 w-8 p-0" [hlmDropdownMenuTrigger]="ActionDropDownMenu">
+		<button hlmBtn variant="ghost" class="h-8 w-8 p-0" [hlmDropdownMenuTrigger]="ActionDropDownMenu" align="end">
 			<span class="sr-only">Open menu</span>
 			<ng-icon hlm size="sm" name="lucideEllipsis" />
 		</button>
@@ -28,7 +28,7 @@ import {SuccessSonner} from './add-transaction-modal/submit-sonner/submit-sonner
 				<button hlmDropdownMenuItem (click)="copyTransactionId()">Copy transaction ID</button>
 				<hlm-dropdown-menu-separator />
 				<button hlmDropdownMenuItem (click)="deleteTransaction()">Delete transaction</button>
-				<button hlmDropdownMenuItem>View payment details</button>
+				<button hlmDropdownMenuItem>Update payment details</button>
 			</hlm-dropdown-menu>
 		</ng-template>
 	`,
