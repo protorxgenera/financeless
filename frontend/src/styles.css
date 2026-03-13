@@ -178,3 +178,23 @@
     --color-income-hover: var(--income-hover);
 }
 
+@layer utilities {
+    .nice-scrollbar {
+        /* Firefox */
+        scrollbar-width: thin !important;
+        scrollbar-color: var(--muted) transparent;
+
+        /* Chrome, Edge, and Safari */
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--muted);
+            border-radius: 20px;
+        }
+    }
+}
+

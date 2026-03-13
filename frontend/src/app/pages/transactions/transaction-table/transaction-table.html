@@ -31,7 +31,7 @@
     </div>
 
     <!-- table itself -->
-    <div class="flex-initial min-h-0 max-h-full overflow-auto rounded-md border mb-auto">
+    <div class="flex-initial min-h-0 max-h-full overflow-auto rounded-md border mb-auto nice-scrollbar">
         <!-- we defer the loading of the table, because tanstack manipulates the DOM with flexRender which can cause errors during SSR -->
         @defer {
             <div hlmTableContainer class="h-full">
