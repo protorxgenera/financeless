@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideEllipsis } from '@ng-icons/lucide';
+import {lucideCopy, lucideDelete, lucideEllipsis, lucideSquarePen} from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import {HlmDropdownMenuConfig, HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
@@ -15,7 +15,7 @@ import {SuccessSonner} from './add-transaction-modal/submit-sonner/submit-sonner
 @Component({
     selector: 'spartan-action-dropdown',
     imports: [HlmButtonImports, NgIcon, HlmIconImports, HlmDropdownMenuImports, HlmToaster, SuccessSonner],
-    providers: [provideIcons({ lucideEllipsis })],
+    providers: [provideIcons({ lucideEllipsis, lucideCopy, lucideDelete, lucideSquarePen })],
     template: `
 		<button hlmBtn variant="ghost" class="h-8 w-8 p-0" [hlmDropdownMenuTrigger]="ActionDropDownMenu" align="end">
 			<span class="sr-only">Open menu</span>
@@ -25,10 +25,13 @@ import {SuccessSonner} from './add-transaction-modal/submit-sonner/submit-sonner
 		<ng-template #ActionDropDownMenu>
 			<hlm-dropdown-menu>
 				<hlm-dropdown-menu-label>Actions</hlm-dropdown-menu-label>
-				<button hlmDropdownMenuItem (click)="copyTransactionId()">Copy transaction ID</button>
+				<button hlmDropdownMenuItem (click)="copyTransactionId()">
+                    <ng-icon hlm name="lucideCopy" size="sm" />Copy transaction ID</button>
+				<button hlmDropdownMenuItem>
+                    <ng-icon hlm name="lucideSquarePen" size="sm" />Update transaction details</button>
 				<hlm-dropdown-menu-separator />
-				<button hlmDropdownMenuItem (click)="deleteTransaction()">Delete transaction</button>
-				<button hlmDropdownMenuItem>Update payment details</button>
+				<button hlmDropdownMenuItem (click)="deleteTransaction()">
+                    <ng-icon hlm name="lucideDelete" size="sm" />Delete transaction</button>
 			</hlm-dropdown-menu>
 		</ng-template>
 	`,
