@@ -56,4 +56,12 @@ export class TransactionsService {
             (data) => { return [...data, transaction] }
     )
     }
+
+    deleteTransactionFromList(id: string) {
+        this.transactionsData.update(
+            (data) => {
+                return data.filter((element) => element.id !== id )
+            }
+        )
+    }
 }
