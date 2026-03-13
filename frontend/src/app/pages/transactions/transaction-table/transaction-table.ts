@@ -61,6 +61,9 @@ import {HlmSheetTrigger} from '@spartan-ng/helm/sheet';
         AddTransactionModal,
         HlmSheetTrigger,
     ],
+    host: {
+        class: 'flex flex-1 flex-col min-h-0 w-full overflow-hidden'
+    },
     providers: [provideIcons({ lucideChevronDown, lucideChevronLeft, lucideChevronsLeft, lucideChevronRight, lucideChevronsRight, lucideCirclePlus})],
     templateUrl: './transaction-table.html',
     styleUrl: './transaction-table.css',

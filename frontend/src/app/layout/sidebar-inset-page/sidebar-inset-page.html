@@ -1,10 +1,12 @@
-<site-sidebar>
+<site-sidebar class="h-dvh overflow-hidden">
     <main hlmSidebarInset>
-        <site-header/>
+        <site-header class="shrink-0"/>
 
-        <div class="flex flex-1 flex-col gap-4 p-8">
-            <page-header/>
-            <router-outlet/>
+        <div class="flex flex-1 flex-col p-8 min-h-0 overflow-hidden">
+            <page-header class="shrink-0 mb-4"/>
+            <div class="flex-1 min-h-0 flex flex-col overflow-hidden">
+                <router-outlet/>
+            </div>
         </div>
 
     </main>

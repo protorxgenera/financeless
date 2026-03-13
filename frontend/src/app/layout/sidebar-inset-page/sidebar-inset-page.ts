@@ -10,9 +10,6 @@ import {PageHeader} from '../page-header/page-header';
     imports: [HlmSidebarImports, SiteHeader, RouterOutlet, SiteSidebar, PageHeader],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'block',
-    },
     styleUrl: './sidebar-inset-page.css',
     templateUrl: './sidebar-inset-page.html',
 })

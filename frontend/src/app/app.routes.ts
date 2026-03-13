@@ -3,6 +3,7 @@ import {Dashboard} from './pages/dashboard/dashboard';
 import {Transactions} from './pages/transactions/transactions-page';
 import {Analytics} from './pages/analytics/analytics';
 import {Settings} from './pages/settings/settings';
+import {TransactionTable} from './pages/transactions/transaction-table/transaction-table';
 
 export const routes: Routes = [
     {
@@ -12,7 +13,7 @@ export const routes: Routes = [
     },
     {
         path: 'transactions',
-        component: Transactions,
+        component: TransactionTable,
         data: { title: 'transactions' }
     },
     {
