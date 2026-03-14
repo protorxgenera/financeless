@@ -1,4 +1,4 @@
-import {Component, effect, inject, OnInit, signal, viewChild} from '@angular/core';
+import {Component, effect, inject, signal, viewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {
@@ -6,7 +6,8 @@ import {
     lucideChevronLeft,
     lucideChevronRight,
     lucideChevronsLeft,
-    lucideChevronsRight, lucideCirclePlus
+    lucideChevronsRight,
+    lucideCirclePlus
 } from '@ng-icons/lucide';
 import {BrnSelect, BrnSelectImports} from '@spartan-ng/brain/select';
 import {HlmButtonImports} from '@spartan-ng/helm/button';
@@ -14,7 +15,6 @@ import {HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
 import {HlmIconImports} from '@spartan-ng/helm/icon';
 import {HlmSelectImports} from '@spartan-ng/helm/select';
 import {HlmTableImports} from '@spartan-ng/helm/table';
-import {HlmTabsImports} from '@spartan-ng/helm/tabs';
 import {hlmMuted} from '@spartan-ng/helm/typography';
 import {
     type ColumnDef,
@@ -40,7 +40,6 @@ import {StatusIconCell} from './components/status-icon-cell';
 import {TableActions} from './components/table-actions';
 import {HlmLabelImports} from '@spartan-ng/helm/label';
 import {AddTransactionModal} from './components/add-transaction-modal/add-transaction-modal';
-import {HlmSheetTrigger} from '@spartan-ng/helm/sheet';
 
 @Component({
     selector: 'transaction-table',
@@ -54,12 +53,11 @@ import {HlmSheetTrigger} from '@spartan-ng/helm/sheet';
         BrnSelectImports,
         HlmSelectImports,
         HlmTableImports,
-        HlmTabsImports,
         TableActions,
         BrnSelect,
         HlmLabelImports,
         AddTransactionModal,
-        HlmSheetTrigger,
+
     ],
     host: {
         class: 'flex flex-1 flex-col min-h-0 w-full overflow-hidden'
@@ -99,6 +97,7 @@ export class TransactionTable {
         {
             accessorKey: 'date',
             id: 'date',
+            size: 20,
             header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
             cell: (info) => {
 
@@ -133,7 +132,6 @@ export class TransactionTable {
             accessorKey: 'transaction_status',
             id: 'status',
             header: 'Status',
-            filterFn: 'arrIncludesSome',
             enableSorting: false,
             cell: () => flexRenderComponent(StatusIconCell),
         },

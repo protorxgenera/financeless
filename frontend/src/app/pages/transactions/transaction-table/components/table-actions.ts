@@ -106,35 +106,33 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
                     align="start"
                 >
                     <button hlmBtn hlmPopoverTrigger variant="outline" size="sm" class="border-dashed">
-                        <ng-icon hlm name="lucideCirclePlus" class="mr-2" size="sm"/>
-                        Status
-                        @if (_statusFilter().length) {
-                            <div data-orientation="vertical" role="none"
-                                 class="bg-border mx-2 h-4 w-px shrink-0"></div>
-
-                            <div class="flex gap-1">
-                                @for (status of _statusFilter(); track status) {
-                                    <span class="bg-secondary text-secondary-foreground rounded px-1 py-0.5 text-xs">
-										{{ status }}
-									</span>
-                                }
-                            </div>
-                        }
+                        <ng-icon hlm [name]="_currentStatus() | statusIcon" class="mr-2" size="sm"/>
+                        {{ (_currentStatus() ? _currentStatus() : 'Status') | titlecase }}
+                        <ng-icon hlm size="sm" name="lucideChevronsUpDown" class="opacity-50"/>
                     </button>
-                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-50 p-0">
-                        <hlm-command-input placeholder="Search Status"/>
-                        <hlm-command-list>
-                            <div *hlmCommandEmptyState hlmCommandEmpty>No results found.</div>
-                            <hlm-command-group>
-                                @for (status of _statuses(); track status) {
-                                    <button hlm-command-item [value]="status" (selected)="statusSelected(status)">
-                                        <hlm-checkbox class="mr-2" [checked]="isStatusSelected(status)"/>
 
-                                        <ng-icon hlm [name]="status | statusIcon" class="text-muted-foreground mx-2"
+                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-50 p-0">
+                        <hlm-command-list>
+                            <hlm-command-group>
+
+                                @for (status of _statuses(); track status) {
+
+                                    <button hlm-command-item
+                                            [value]="status"
+                                            (selected)="statusSelected(status)">
+                                        <ng-icon hlm [name]="status | statusIcon" class="text-muted-foreground"
                                                  size="sm"/>
-                                        {{ status }}
+                                        <span>{{ status | titlecase }}</span>
+                                        <ng-icon
+                                            hlm
+                                            class="ml-auto"
+                                            [class.opacity-0]="_currentStatus() !== status"
+                                            name="lucideCheck"
+                                            hlmCommandIcon
+                                        />
                                     </button>
                                 }
+
                             </hlm-command-group>
                         </hlm-command-list>
                     </hlm-command>
@@ -200,9 +198,10 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
 
                                 @for (type of _types(); track type) {
 
-                                    <button hlm-command-item [value]="type"
+                                    <button hlm-command-item
+                                            [value]="type"
                                             (selected)="typeSelected(type)">
-                                        <ng-icon hlm [name]="type | typeIcon" class="mr-2" size="sm"/>
+                                        <ng-icon hlm [name]="type | typeIcon" class="text-muted-foreground" size="sm"/>
                                         <span>{{ type | titlecase }}</span>
                                         <ng-icon
                                             hlm
@@ -219,7 +218,7 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
                 </hlm-popover>
 
                 <!-- FILTER RESET BUTTON -->
-                @if (_statusFilter().length || _categoryFilter().length) {
+                @if (_currentStatus() || _categoryFilter().length || _currentType()) {
                     <button hlmBtn variant="ghost" size="sm" align="end" (click)="resetFilters()">
                         Reset
                         <ng-icon hlm name="lucideX" class="ml-2" size="sm"/>
@@ -262,7 +261,7 @@ export class TableActions {
 
     protected readonly _hidableColumns = this._table.getAllColumns().filter((column) => column.getCanHide());
 
-    protected readonly _statusFilter = signal<TransactionStatus[]>([]);
+    protected readonly _currentStatus = signal<TransactionStatus | undefined>(undefined)
     protected readonly _statuses = signal(['COMPLETED', 'UPCOMING'] satisfies TransactionStatus[]);
     protected readonly _statusState = signal<'closed' | 'open'>('closed');
 
@@ -280,9 +279,6 @@ export class TableActions {
         this._table.getColumn('name')?.setFilterValue((event.target as HTMLInputElement).value);
     }
 
-    isStatusSelected(status: TransactionStatus): boolean {
-        return this._statusFilter().some((s) => s === status);
-    }
 
     typeStateChanged(state: 'open' | 'closed') {
         this._typeState.set(state);
@@ -293,22 +289,21 @@ export class TableActions {
     }
 
     statusSelected(status: TransactionStatus): void {
-        const current = this._statusFilter();
-        const index = current.indexOf(status);
-        if (index === -1) {
-            this._statusFilter.set([...current, status]);
+        this._statusState.set('closed')
+        if (this._currentStatus() === status) {
+            this._currentStatus.set(undefined)
         } else {
-            this._statusFilter.set(current.filter((s) => s !== status));
+            this._currentStatus.set(status)
         }
-        this._table.getColumn('status')?.setFilterValue(this._statusFilter());
+        this._table.getColumn('status')?.setFilterValue(this._currentStatus());
     }
 
     typeSelected(type: TransactionType) {
-        this._typeState.set('closed');
+        this._typeState.set('closed')
         if (this._currentType() === type) {
-            this._currentType.set(undefined);
+            this._currentType.set(undefined)
         } else {
-            this._currentType.set(type);
+            this._currentType.set(type)
         }
     }
 
@@ -332,8 +327,9 @@ export class TableActions {
     }
 
     resetFilters(): void {
-        this._categoryFilter.set([]);
-        this._statusFilter.set([]);
-        this._table.resetColumnFilters();
+        this._categoryFilter.set([])
+        this._currentStatus.set(undefined)
+        this._currentType.set(undefined)
+        this._table.resetColumnFilters()
     }
 }

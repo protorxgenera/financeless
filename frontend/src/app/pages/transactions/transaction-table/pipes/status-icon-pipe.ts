@@ -5,14 +5,14 @@ import {TransactionStatus} from '../services/transactions-model';
     name: 'statusIcon',
 })
 export class StatusIconPipe implements PipeTransform {
-    transform(value: TransactionStatus): string {
+    transform(value: TransactionStatus | undefined): string {
         switch (value) {
             case 'UPCOMING':
                 return 'lucideCircleDashed';
             case 'COMPLETED':
                 return 'lucideCircleCheckBig';
             default:
-                return 'lucideCircleHelp'; // Default icon if not recognized
+                return 'lucideCirclePlus'; // Default icon if not recognized
         }
     }
 }
