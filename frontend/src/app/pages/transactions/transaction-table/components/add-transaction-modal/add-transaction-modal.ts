@@ -163,7 +163,7 @@ export class AddTransactionModal {
             return;
         }
 
-        const { name, amount, type, date, time, category, description } = this.form.getRawValue()
+        const { name, amount, currency, type, date, time, category, description } = this.form.getRawValue()
 
         let isoDateTime = ''
         if (date && time) {
@@ -184,6 +184,7 @@ export class AddTransactionModal {
             date: isoDateTime,
             name: name || '',
             amount: signedAmount,
+            currency: this.selectedCurrency().id,
             category: category || '',
             transaction_status: "COMPLETED",
             details: description || '',
