@@ -140,6 +140,7 @@ export class TransactionTable {
             id: 'amount',
             header: '<div class="text-right">Amount</div>',
             enableSorting: false,
+            filterFn: 'inNumberRange',
             cell: (info) => {
                 const amount = parseFloat(info.getValue<string>());
                 const formatted = new Intl.NumberFormat('en-US', {

@@ -300,10 +300,21 @@ export class TableActions {
 
     typeSelected(type: TransactionType) {
         this._typeState.set('closed')
+
         if (this._currentType() === type) {
             this._currentType.set(undefined)
         } else {
             this._currentType.set(type)
+        }
+
+        let filterArray: number[] = []
+
+        if(this._currentType() === 'income') {
+            filterArray = [0, Number.MAX_SAFE_INTEGER]
+            this._table.getColumn('amount')?.setFilterValue(filterArray)
+        } else if(this._currentType() === 'expense') {
+            filterArray = [Number.MIN_SAFE_INTEGER, 0]
+            this._table.getColumn('amount')?.setFilterValue(filterArray)
         }
     }
 
