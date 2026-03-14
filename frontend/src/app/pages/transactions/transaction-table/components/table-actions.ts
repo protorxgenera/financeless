@@ -1,46 +1,50 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { NgIcon, provideIcons } from '@ng-icons/core';
+import {Component, inject, signal} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {NgIcon, provideIcons} from '@ng-icons/core';
 import {
     lucideCheck,
     lucideChevronDown,
     lucideChevronLeft,
     lucideChevronsUp,
+    lucideChevronsUpDown,
     lucideChevronUp,
     lucideCircle,
     lucideCircleCheckBig,
     lucideCircleDashed,
     lucideCircleDot,
+    lucideCircleFadingPlus,
     lucideCircleHelp,
+    lucideCircleMinus,
     lucideCircleOff,
     lucideCirclePlus,
     lucideGlobe,
     lucideMicVocal,
     lucideSearch,
     lucideSettings2,
+    lucideWallet,
     lucideX,
 } from '@ng-icons/lucide';
-import { BrnCommandImports } from '@spartan-ng/brain/command';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
-import { HlmCommandImports } from '@spartan-ng/helm/command';
-import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { HlmIcon } from '@spartan-ng/helm/icon';
-import { HlmInput } from '@spartan-ng/helm/input';
-import { HlmPopoverImports } from '@spartan-ng/helm/popover';
+import {BrnCommandImports} from '@spartan-ng/brain/command';
+import {HlmButton} from '@spartan-ng/helm/button';
+import {HlmCheckboxImports} from '@spartan-ng/helm/checkbox';
+import {HlmCommandImports} from '@spartan-ng/helm/command';
+import {HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
+import {HlmIcon} from '@spartan-ng/helm/icon';
+import {HlmPopoverImports} from '@spartan-ng/helm/popover';
 import {TransactionTable} from '../transaction-table';
 import {StatusIconPipe} from '../pipes/status-icon-pipe';
-import {TransactionStatus} from '../services/transactions-model';
+import {TransactionStatus, TransactionType} from '../services/transactions-model';
 import {TransactionsService} from '../services/transactions-service';
 import {CalendarDatePickerRangeComponent} from './calendar-date-picker-range';
 import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
+import {TitleCasePipe} from '@angular/common';
+import {TypeIconPipe} from '../pipes/type-icon-pipe';
 
 @Component({
     selector: 'table-actions',
     imports: [
         HlmButton,
         FormsModule,
-        HlmInput,
         NgIcon,
         HlmIcon,
         HlmDropdownMenuImports,
@@ -51,6 +55,8 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
         StatusIconPipe,
         CalendarDatePickerRangeComponent,
         HlmInputGroupImports,
+        TitleCasePipe,
+        TypeIconPipe,
     ],
     providers: [
         provideIcons({
@@ -71,6 +77,10 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
             lucideSearch,
             lucideSettings2,
             lucideX,
+            lucideCircleFadingPlus,
+            lucideCircleMinus,
+            lucideChevronsUpDown,
+            lucideWallet,
         }),
     ],
     host: {
@@ -79,7 +89,8 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
     template: `
         <div class="wip-table-search flex flex-col justify-between items-center gap-4 sm:flex-row">
             <div class="flex flex-col justify-between gap-4 sm:flex-row">
-                <!-- TASK TITLE FILTER -->
+
+                <!-- TRANSACTION SEARCH -->
                 <div hlmInputGroup class="h-8">
                     <input hlmInputGroupInput class="w-full md:w-80" placeholder="Search for transactions..."
                            (input)="transactionFilterChange($event)"/>
@@ -101,7 +112,7 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
                         Status
                         @if (_statusFilter().length) {
                             <div data-orientation="vertical" role="none"
-                                 class="bg-border mx-2 h-4 w-[1px] shrink-0"></div>
+                                 class="bg-border mx-2 h-4 w-px shrink-0"></div>
 
                             <div class="flex gap-1">
                                 @for (status of _statusFilter(); track status) {
@@ -112,7 +123,7 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
                             </div>
                         }
                     </button>
-                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-[200px] p-0">
+                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-50 p-0">
                         <hlm-command-input placeholder="Search Status"/>
                         <hlm-command-list>
                             <div *hlmCommandEmptyState hlmCommandEmpty>No results found.</div>
@@ -144,7 +155,7 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
                         Category
                         @if (_categoryFilter().length) {
                             <div data-orientation="vertical" role="none"
-                                 class="bg-border mx-2 h-4 w-[1px] shrink-0"></div>
+                                 class="bg-border mx-2 h-4 w-px shrink-0"></div>
 
                             <div class="flex gap-1">
                                 @for (category of _categoryFilter(); track category) {
@@ -155,7 +166,7 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
                             </div>
                         }
                     </button>
-                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-[200px] p-0">
+                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-50 p-0">
                         <hlm-command-input placeholder="Search Category"/>
                         <hlm-command-list>
                             <div *hlmCommandEmptyState hlmCommandEmpty>No results found.</div>
@@ -171,12 +182,52 @@ import {HlmInputGroupImports} from '@spartan-ng/helm/input-group';
                     </hlm-command>
                 </hlm-popover>
 
+                <!-- TYPE [INCOME/EXPENSE] -->
+                <hlm-popover
+                    [state]="_typeState()"
+                    (stateChanged)="typeStateChanged($event)"
+                    sideOffset="5"
+                    closeDelay="100"
+                    align="start"
+                >
+                    <button hlmBtn hlmPopoverTrigger variant="outline" size="sm" class="border-dashed">
+                        <ng-icon hlm [name]="_currentType() | typeIcon" class="mr-2" size="sm"/>
+                        {{ (_currentType() ? _currentType() : 'Type') | titlecase }}
+                        <ng-icon hlm size="sm" name="lucideChevronsUpDown" class="opacity-50"/>
+                    </button>
+
+                    <hlm-command *hlmPopoverPortal="let ctx" hlmPopoverContent class="w-50 p-0">
+                        <hlm-command-list>
+                            <hlm-command-group>
+
+                                @for (type of _types(); track type) {
+
+                                    <button hlm-command-item [value]="type"
+                                            (selected)="typeSelected(type)">
+                                        <ng-icon hlm [name]="type | typeIcon" class="mr-2" size="sm"/>
+                                        <span>{{ type | titlecase }}</span>
+                                        <ng-icon
+                                            hlm
+                                            class="ml-auto"
+                                            [class.opacity-0]="_currentType() !== type"
+                                            name="lucideCheck"
+                                            hlmCommandIcon
+                                        />
+                                    </button>
+                                }
+                            </hlm-command-group>
+                        </hlm-command-list>
+                    </hlm-command>
+                </hlm-popover>
+
+                <!-- FILTER RESET BUTTON -->
                 @if (_statusFilter().length || _categoryFilter().length) {
                     <button hlmBtn variant="ghost" size="sm" align="end" (click)="resetFilters()">
                         Reset
                         <ng-icon hlm name="lucideX" class="ml-2" size="sm"/>
                     </button>
                 }
+
             </div>
 
             <!-- COLUMN VISIBILITY -->
@@ -212,16 +263,19 @@ export class TableActions {
     protected readonly _table = this._tableComponent._table;
 
     protected readonly _hidableColumns = this._table.getAllColumns().filter((column) => column.getCanHide());
+
     protected readonly _statusFilter = signal<TransactionStatus[]>([]);
     protected readonly _statuses = signal(['COMPLETED', 'UPCOMING'] satisfies TransactionStatus[]);
     protected readonly _statusState = signal<'closed' | 'open'>('closed');
 
+    protected readonly _currentType = signal<TransactionType | undefined>(undefined);
+    protected readonly _types = signal(['income', 'expense'] satisfies TransactionType[]); // these are the filter options that we can select
+    protected readonly _typeState = signal<'closed' | 'open'>('closed'); // the state of the popover
+
+    private readonly transactionsService = inject(TransactionsService)
+    protected readonly _currentCategories = new Set(this.transactionsService.getTransactions()().map((item) => item.category))
     protected readonly _categoryFilter = signal<string[]>([]);
-
-    transactionsService = inject(TransactionsService)
-    currentCategories = new Set(this.transactionsService.getTransactions()().map((item) => item.category))
-
-    protected readonly _categories = signal([...this.currentCategories]);
+    protected readonly _categories = signal([...this._currentCategories]);
     protected readonly _categoryState = signal<'closed' | 'open'>('closed');
 
     protected transactionFilterChange(event: Event) {
@@ -230,6 +284,10 @@ export class TableActions {
 
     isStatusSelected(status: TransactionStatus): boolean {
         return this._statusFilter().some((s) => s === status);
+    }
+
+    typeStateChanged(state: 'open' | 'closed') {
+        this._typeState.set(state);
     }
 
     statusStateChanged(state: 'open' | 'closed') {
@@ -245,6 +303,15 @@ export class TableActions {
             this._statusFilter.set(current.filter((s) => s !== status));
         }
         this._table.getColumn('status')?.setFilterValue(this._statusFilter());
+    }
+
+    typeSelected(type: TransactionType) {
+        this._typeState.set('closed');
+        if (this._currentType() === type) {
+            this._currentType.set(undefined);
+        } else {
+            this._currentType.set(type);
+        }
     }
 
     isCategorySelected(category: string): boolean {

@@ -171,11 +171,11 @@ export class TransactionTable implements OnInit {
     private readonly _rowSelection = signal<RowSelectionState>({});
     private readonly _columnVisibility = signal<VisibilityState>({});
     private readonly _pagination = signal<PaginationState>({
-        pageSize: 13,
+        pageSize: 10,
         pageIndex: 0,
     });
-    protected readonly _availablePageSizes = [5, 10, 13, 20, 10000];
-    protected readonly _pageSize = signal(this._availablePageSizes[1]); // default to page size 13 cause it fits nice
+    protected readonly _availablePageSizes = [5, 10, 15, 20, 10000];
+    protected readonly _pageSize = signal(this._availablePageSizes[1]);
 
     protected setStatusFilter(status: 'COMPLETED' | 'UPCOMING') {
         this._table.getColumn('status')?.setFilterValue([status]);
@@ -212,7 +212,7 @@ export class TransactionTable implements OnInit {
         },
         initialState: {
             pagination: {
-                pageSize: 13,
+                pageSize: 10,
             },
         },
     }));
