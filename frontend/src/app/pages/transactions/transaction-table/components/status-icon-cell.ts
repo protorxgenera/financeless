@@ -13,10 +13,11 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
 import {Transaction} from '../services/transactions-model';
 import {StatusIconPipe} from '../pipes/status-icon-pipe';
+import {HlmBadgeImports} from '@spartan-ng/helm/badge';
 
 @Component({
     selector: 'spartan-status-icon-cell',
-    imports: [StatusIconPipe, NgIcon, HlmIcon, StatusIconPipe],
+    imports: [StatusIconPipe, NgIcon, HlmIcon, StatusIconPipe, HlmBadgeImports],
     providers: [
         provideIcons({
             lucideCircle,
@@ -28,10 +29,15 @@ import {StatusIconPipe} from '../pipes/status-icon-pipe';
         }),
     ],
     template: `
-		<div class="flex items-center rounded-md border px-2.5 py-1 text-xs font-semiboldn w-fit">
-			<ng-icon hlm class="text-muted-foreground mr-2" size="sm" [name]="_element.transaction_status | statusIcon" />
+            <span
+                id="{{ _element.id }}-status"
+                hlmBadge
+                variant="outline"
+                class="text-muted-foreground rounded-full px-1.5 text-xs"
+            >
+			<ng-icon hlm size="xs" [name]="_element.transaction_status | statusIcon" />
 			{{ _element.transaction_status }}
-		</div>
+		</span>
 	`,
 })
 export class StatusIconCell {
