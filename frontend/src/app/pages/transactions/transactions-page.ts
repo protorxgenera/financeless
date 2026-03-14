@@ -13,6 +13,4 @@ export class Transactions {
 
 // TODO: create amount filter for the table (that filters numbers bigger than or lower than a user-defined amount).
 
-// TODO: reformat date and time column to show time under date.
-
 }

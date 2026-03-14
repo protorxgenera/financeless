@@ -104,7 +104,15 @@ export class TransactionTable implements OnInit {
             accessorKey: 'date',
             id: 'date',
             header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
-            cell: (info) => `<div>${info.getValue<string>()}</div>`,
+            cell: (info) => {
+
+                const date = info.getValue<string>().split(' ')[0]
+                const time = info.getValue<string>().split(' ')[1].slice(0, 5)
+                // format date
+                // format time
+
+                return `<div>${date}</div><div>${time}</div>`
+            },
         },
         {
             accessorKey: 'name',
