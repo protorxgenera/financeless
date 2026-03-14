@@ -142,8 +142,9 @@ export class TransactionTable implements OnInit {
                 const amount = parseFloat(info.getValue<string>());
                 const formatted = new Intl.NumberFormat('en-US', {
                     style: 'currency',
-                    currency: 'USD',
+                    currency: info.cell.row.original.currency,
                 }).format(amount);
+
 
                 return `<div class="text-right">${formatted}</div>`;
             },

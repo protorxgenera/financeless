@@ -15,6 +15,4 @@ export class Transactions {
 
 // TODO: reformat date and time column to show time under date.
 
-// TODO: reformat amount column to not be in dollars anymore.
-
 }
