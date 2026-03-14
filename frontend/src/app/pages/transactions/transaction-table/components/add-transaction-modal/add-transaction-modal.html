@@ -1,16 +1,20 @@
 <hlm-sheet side="right" >
 
 
-    <button id="edit-profile" hlmSheetTrigger hlmBtn size="sm" class="hidden h-8 sm:flex">
+    <button id="edit-profile" (click)="open(null)" hlmBtn size="sm" class="hidden h-8 sm:flex">
         <ng-icon hlm name="lucideCirclePlus" size="sm"/>
-        <span><ng-content/></span>
+        <span>Add transaction</span>
     </button>
 
     <hlm-sheet-content *hlmSheetPortal="let ctx"
                        class="right-2 top-2 bottom-2 h-[calc(100dvh-1rem)] sm:max-w-md rounded-xl border shadow-2xl overflow-auto no-scrollbar">
         <hlm-sheet-header>
-            <h3 hlmSheetTitle>Add transaction</h3>
-            <p hlmSheetDescription>Add a transaction [either income or expense] and save it to the database.</p>
+            <h3 hlmSheetTitle>{{ mode() }} transaction</h3>
+            <p hlmSheetDescription>
+                {{
+                    mode() === 'Add' ? 'Add a new transaction' : 'Update this transaction'
+                }}
+            </p>
         </hlm-sheet-header>
 
         <div class="grid flex-1 auto-rows-min gap-6 px-4">
@@ -59,7 +63,7 @@
                             autoComplete="off"
                             formControlName="name"
                         />
-                        @if (form.controls.name.touched && form.controls.name.invalid) {
+                        @if (form.controls.type.touched && form.controls.name.invalid) {
                             <hlm-field-error>
                                 @if (form.controls.name.errors?.['required'] || form.controls.name.errors?.['minlength']) {
                                     Title must be at least 3 characters.
@@ -115,7 +119,7 @@
                             </div>
                         </div>
 
-                        @if (form.controls.amount.touched && form.controls.amount.invalid) {
+                        @if (form.controls.type.touched && form.controls.amount.invalid) {
                             <hlm-field-error>
                                 @if (form.controls.amount.errors?.['required']) {
                                     Amount is required.
@@ -216,7 +220,7 @@
                                     hlmInputGroupText>{{ form.controls.description.value?.length || 0 }}/100 characters</span>
                             </hlm-input-group-addon>
                         </hlm-input-group>
-                        @if (form.controls.description.touched && form.controls.description.invalid) {
+                        @if (form.controls.type.touched && form.controls.description.invalid) {
                             <hlm-field-error>
                                 @if (form.controls.description.errors?.['maxlength']) {
                                     Description cannot exceed 100 characters.
@@ -236,7 +240,7 @@
                     <ng-icon name="lucideRotateCw"/>
                     Reset
                 </button>
-                <button hlmBtn class="flex flex-3" form="form-add-transaction" (click)="submit(ctx)">Save</button>
+                <button hlmBtn type="button" class="flex flex-3" form="form-add-transaction" (click)="submit(ctx)">Save</button>
             </div>
 
 

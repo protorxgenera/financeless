@@ -1,4 +1,4 @@
-import {Component, inject, signal, viewChild} from '@angular/core';
+import {Component, computed, effect, inject, input, signal, viewChild} from '@angular/core';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {lucideCalendar1, lucideChevronDown, lucideCross, lucideRotateCw} from '@ng-icons/lucide';
 import {HlmSheetImports} from '@spartan-ng/helm/sheet';
@@ -50,63 +50,72 @@ import {SuccessSonner} from './submit-sonner/submit-sonner';
 })
 export class AddTransactionModal {
 
-    public readonly sheetRef = viewChild(BrnSheet);
+    public transaction = signal<Transaction | null>(null);
+    public mode = computed(() => this.transaction() ? 'Update' : 'Add')
 
-    //TODO I reverted back the logic for the ESC button so that I can take care of the animation.
-    // I should revisit this in the future
-
-    // public isAlertOpen = signal(false);
-    //
-    // @HostListener('document:mousedown', ['$event'])
-    // onGlobalClick(event: MouseEvent) {
-    //     const target = event.target as HTMLElement;
-    //
-    //     const backdrops = document.querySelectorAll('.cdk-overlay-backdrop');
-    //
-    //     if (backdrops.length > 1) {
-    //         return;
-    //     }
-    //
-    //     const isOverlay = target.classList.contains('cdk-overlay-backdrop');
-    //
-    //     if (isOverlay) {
-    //         this.isAlertOpen.set(true);
-    //     }
-    // }
-
-
-    private readonly _fb = inject(FormBuilder);
-    private readonly now = new Date();
-    private readonly currentTime = this.now.toTimeString().split(' ')[0];
+    public readonly sheetRef = viewChild(BrnSheet)
+    public submitted = signal(false)
 
     private readonly service = inject(TransactionsService)
     protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
 
+    private readonly _fb = inject(FormBuilder)
+    private _now: Date = new Date()
+    private _currentTime= this._now.toTimeString().split(' ')[0]
+
+    constructor() {
+
+        effect(() => {
+            const data = this.transaction()
+            if (data) {
+
+                const timePart = data.date.includes(' ')
+                    ? data.date.split(' ')[1].substring(0, 8)
+                    : this._currentTime
+
+                this.form.patchValue(
+                    {
+                        type: data.amount > 0 ? 'income' : 'expense',
+                        name: data.name,
+                        amount: Math.abs(data.amount).toString(),
+                        date: new Date(data.date), // Convert SQLite string back to Date object
+                        time: timePart,
+                        category: data.category,
+                        description: data.details
+                    }
+                )
+
+                const typeObj = this.types.find(t => t.id === (data.amount > 0 ? 'income' : 'expense'))
+                this.selectedType.set(typeObj)
+
+                this.selectedCurrency.set(this.currencies[0])
+
+            } else {
+                this.reset()
+            }
+        })
+    }
+
     public form = this._fb.group({
-        type: ['', {validators: Validators.required, updateOn: 'submit'}],
-        name: ['', {
-            validators: [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
-            updateOn: 'submit'
-        }],
-        amount: ['', {validators: [Validators.required, Validators.min(0), numericValidator], updateOn: 'submit'}],
-        date: [this.now, []],
-        time: [this.currentTime, []],
+        type: ['', Validators.required],
+        name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(32)]],
+        amount: ['', [Validators.required, Validators.min(0), numericValidator]],
+        date: [this._now, []],
+        time: [this._currentTime, []],
         currency: ['ron', []],
         category: ['', []],
         description: ['', [Validators.maxLength(100)]],
-    });
+    })
 
 
     public types = [
         {
             id: 'income',
             title: 'Income',
-            description: 'Piure cu carnita :)',
         },
         {
             id: 'expense',
             title: 'Expense',
-            description: 'Piure fara carnita :(',
         },
     ]
 
@@ -130,19 +139,19 @@ export class AddTransactionModal {
         },
     ]
 
-    public minDate = new Date(2005, 0, 1);
-    public maxDate = new Date(2030, 11, 31);
+    public minDate = new Date(2005, 0, 1)
+    public maxDate = new Date(2040, 11, 31)
 
-    public selectedCurrency = signal(this.currencies[0]);
+    public selectedCurrency = signal(this.currencies[0])
 
     public selectCurrency(currency: typeof this.currencies[0]) {
-        this.selectedCurrency.set(currency);
-        this.form.get('currency')?.setValue(currency.id);
+        this.selectedCurrency.set(currency)
+        this.form.get('currency')?.setValue(currency.id)
     }
 
     public selectType(type: typeof this.types[0]) {
         this.selectedType.set(type)
-        this.form.get('type')?.setValue(type.id);
+        this.form.get('type')?.setValue(type.id)
     }
 
     isIncomeSelected(id: string): boolean {
@@ -150,79 +159,94 @@ export class AddTransactionModal {
     }
 
     submit(ctx: any) {
+        this.submitted.set(true)
+
         if (this.form.invalid) {
-            this.form.markAllAsTouched();
+            this.form.markAllAsTouched()
             return;
         }
-        console.log(this.form.value);
 
-        const {date, time} = this.form.value;
+        const { name, amount, type, date, time, category, description } = this.form.getRawValue()
+
         let isoDateTime = ''
         if (date && time) {
-            const datePart = date.toISOString().split('T')[0]; // "yyyy-MM-dd"
-            isoDateTime = `${datePart} ${time}.000`; // ISO8601 datetime
+            const datePart = new Date(date.setHours(4)).toISOString().split('T')[0] // "yyyy-MM-dd"
+            isoDateTime = `${datePart} ${time}.000` // ISO8601 datetime
         }
 
-        const {amount, type} = this.form.getRawValue();
 
-        const numericAmount = Number(amount);
-        const signedAmount = type === 'income' ? numericAmount : -numericAmount;
+        const numericAmount = Number(amount)
+        console.log(numericAmount)
+        const signedAmount = type === 'income' ? numericAmount : -numericAmount
+        console.log(signedAmount)
+
+        const existingTransaction = this.transaction();
 
         const userTransaction: Transaction = {
-            id: crypto.randomUUID(),
+            id: existingTransaction? existingTransaction.id : crypto.randomUUID(),
             date: isoDateTime,
-            name: this.form.value.name ? this.form.value.name : '',
+            name: name || '',
             amount: signedAmount,
-            category: this.form.value.category ? this.form.value.category : '',
+            category: category || '',
             transaction_status: "COMPLETED",
-            details: this.form.value.description ? this.form.value.description : '',
+            details: description || '',
         }
 
-        this.service.addTransaction(userTransaction)
+        if (existingTransaction) {
+            this.service.updateTransactionFromModal(userTransaction)
 
-        console.log(userTransaction)
-        this.form.markAsPristine();
-        this.reset();
+            toast.success('Transaction Updated', {
+                description: `${userTransaction.name} has been modified successfully.`
+            })
+
+        } else {
+            this.service.addTransaction(userTransaction)
+
+            toast.success('Transaction Recorded', {
+                description: `${userTransaction.name} has been added to your history.`
+            })
+        }
+
+        this.submitted.set(false)
         this.closeSheet(ctx)
-        toast.success('Transaction Recorded', {
-            description: `${userTransaction.name} for ${new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: this.selectedCurrency().title
-            }).format(Math.abs(signedAmount))} has been added.`,
-        });
 
+    }
+
+    open(transaction: Transaction | null) {
+        this.transaction.set(transaction)
+        this.sheetRef()?.open();
+        this.setToNow()
     }
 
     setToNow() {
-        const now = new Date();
-        const currentTime = now.toTimeString().split(' ')[0];
+        this._now = new Date()
+        this._currentTime = this._now.toTimeString().split(' ')[0]
         this.form.patchValue({
-            date: now,
-            time: currentTime
-        });
+            date: this._now,
+            time: this._currentTime
+        })
     }
 
     closeSheet(ctx: any) {
-        ctx.close();
-        this.sheetRef()?.close({});
-        this.reset()
+        this.submitted.set(false)
+        ctx.close()
+        this.sheetRef()?.close({})
+        this.transaction.set(null);
+        this.reset();
     }
 
-    //TODO: although there are three ways that all trigger alert, there is a fourth one that doesn't: the ESC
-    // so, fix it
-
-    //TODO: add logic so that the alert only pops up when the form is dirty. If it's pristine, we don't need any alert.
-
     reset() {
+        this.submitted.set(false)
         this.selectedCurrency.set(this.currencies[0])
         this.selectedType.set(undefined)
         this.form.reset({
-            date: this.now,
-            time: this.currentTime,
+            date: this._now,
+            time: this._currentTime,
             currency: this.selectedCurrency().id
         });
 
+        this.form.markAsPristine()
+        this.form.markAsUntouched()
     }
-
 
 }

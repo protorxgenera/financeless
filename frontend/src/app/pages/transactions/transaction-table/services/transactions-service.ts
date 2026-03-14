@@ -64,4 +64,18 @@ export class TransactionsService {
             }
         )
     }
+
+    updateTransactionFromModal(transaction: Transaction) {
+        this.transactionsData.update(
+            (data) => {
+                return data.map((item) => {
+                        if (item.id === transaction.id) {
+                            return transaction
+                        }
+                        return item
+                    }
+                )
+            }
+        )
+    }
 }

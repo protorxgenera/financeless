@@ -27,7 +27,7 @@ import {SuccessSonner} from './add-transaction-modal/submit-sonner/submit-sonner
 				<hlm-dropdown-menu-label>Actions</hlm-dropdown-menu-label>
 				<button hlmDropdownMenuItem (click)="copyTransactionId()">
                     <ng-icon hlm name="lucideCopy" size="sm" />Copy transaction ID</button>
-				<button hlmDropdownMenuItem>
+				<button hlmDropdownMenuItem (click)="updateTransaction()" >
                     <ng-icon hlm name="lucideSquarePen" size="sm" />Update transaction details</button>
 				<hlm-dropdown-menu-separator />
 				<button hlmDropdownMenuItem (click)="deleteTransaction()">
@@ -56,5 +56,18 @@ export class ActionDropdown {
         toast.info('Transaction deleted', {
             description: `${transaction.name} for ${transaction.amount} has been deleted.`,
         });
+    }
+
+    updateTransaction() {
+        const transaction = this._context.row.original;
+
+        console.log(transaction)
+
+        const tableMeta = this._context.table.options.meta as any;
+        const modal = tableMeta?.modal;
+
+        if (modal) {
+            modal.open(transaction);
+        }
     }
 }

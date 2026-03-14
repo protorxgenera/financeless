@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal, viewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {
@@ -75,8 +75,22 @@ export class TransactionTable implements OnInit {
     }
 
     private service = inject(TransactionsService)
+    public readonly modal = viewChild<AddTransactionModal>('addOrUpdateModal');
 
     TRANSACTION_DATA = this.service.getTransactions()
+
+
+    constructor() {
+        effect(() => {
+            const modalRef = this.modal();
+            if (modalRef) {
+                this._table.setOptions({
+                    ...this._table.options,
+                    meta: { modal: modalRef }
+                });
+            }
+        });
+    }
 
     protected readonly _columns: ColumnDef<Transaction>[] = [
         {
