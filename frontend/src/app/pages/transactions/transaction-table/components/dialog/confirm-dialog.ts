@@ -9,14 +9,17 @@ import {HlmAlertDialogImports} from '@spartan-ng/helm/alert-dialog';
     standalone: true,
     imports: [HlmDialogImports, HlmButtonImports, HlmAlertDialogImports],
     template: `
-                <hlm-alert-dialog-header>
-                    <h2 hlmAlertDialogTitle>{{ context.title || 'Are you sure?' }}</h2>
-                    <p hlmAlertDialogDescription>{{ context.message }}</p>
-                </hlm-alert-dialog-header>
-                <hlm-alert-dialog-footer>
-                    <button hlmAlertDialogCancel (click)="dialogRef.close(false)">Cancel</button>
-                    <button hlmAlertDialogAction (click)="dialogRef.close(true)">Confirm</button>
-                </hlm-alert-dialog-footer>
+        <hlm-dialog-header hlmAlertDialogHeader>
+            <h2 hlmAlertDialogTitle>{{ context.title || 'Are you sure?' }}</h2>
+        </hlm-dialog-header>
+        <div class="pt-2 pb-4">
+            <p hlmAlertDialogDescription>{{ context.message }}</p>
+        </div>
+
+        <hlm-dialog-footer hlmAlertDialogFooter>
+            <button hlmAlertDialogCancel (click)="dialogRef.close(false)">Cancel</button>
+            <button hlmAlertDialogAction variant="destructive" (click)="dialogRef.close(true)">Delete</button>
+        </hlm-dialog-footer>
     `
 })
 export class ConfirmDialog {

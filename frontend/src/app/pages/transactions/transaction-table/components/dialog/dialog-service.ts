@@ -10,7 +10,8 @@ export class DialogService {
 
     async confirm(title: string, message: string): Promise<boolean> {
         const dialogRef = this._hlmDialogService.open(ConfirmDialog, {
-            context: { title, message }
+            context: { title, message },
+            contentClass: '[&_.hlm-dialog-close]:hidden [&_button[hlmDialogClose]]:hidden'
         });
 
         const result = await firstValueFrom(dialogRef.closed$);
