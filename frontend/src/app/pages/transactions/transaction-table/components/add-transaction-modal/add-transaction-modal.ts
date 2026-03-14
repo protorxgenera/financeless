@@ -54,7 +54,6 @@ export class AddTransactionModal {
     public mode = computed(() => this.transaction() ? 'Update' : 'Add')
 
     public readonly sheetRef = viewChild(BrnSheet)
-    public submitted = signal(false)
 
     private readonly service = inject(TransactionsService)
     protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
@@ -159,8 +158,6 @@ export class AddTransactionModal {
     }
 
     submit(ctx: any) {
-        this.submitted.set(true)
-
         if (this.form.invalid) {
             this.form.markAllAsTouched()
             return;
@@ -207,9 +204,7 @@ export class AddTransactionModal {
             })
         }
 
-        this.submitted.set(false)
         this.closeSheet(ctx)
-
     }
 
     open(transaction: Transaction | null) {
@@ -228,7 +223,6 @@ export class AddTransactionModal {
     }
 
     closeSheet(ctx: any) {
-        this.submitted.set(false)
         ctx.close()
         this.sheetRef()?.close({})
         this.transaction.set(null);
@@ -236,7 +230,6 @@ export class AddTransactionModal {
     }
 
     reset() {
-        this.submitted.set(false)
         this.selectedCurrency.set(this.currencies[0])
         this.selectedType.set(undefined)
         this.form.reset({
