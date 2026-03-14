@@ -12,7 +12,7 @@ export class TypeIconPipe implements PipeTransform {
             case 'expense':
                 return 'lucideCircleMinus';
             default:
-                return 'lucideWallet'; // Default icon if not recognized
+                return 'lucideCirclePlus'; // Default icon for the action button
         }
     }
 }

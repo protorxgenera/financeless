@@ -21,7 +21,6 @@ import {
     lucideMicVocal,
     lucideSearch,
     lucideSettings2,
-    lucideWallet,
     lucideX,
 } from '@ng-icons/lucide';
 import {BrnCommandImports} from '@spartan-ng/brain/command';
@@ -80,7 +79,6 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
             lucideCircleFadingPlus,
             lucideCircleMinus,
             lucideChevronsUpDown,
-            lucideWallet,
         }),
     ],
     host: {

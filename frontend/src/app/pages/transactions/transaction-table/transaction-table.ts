@@ -68,11 +68,7 @@ import {HlmSheetTrigger} from '@spartan-ng/helm/sheet';
     templateUrl: './transaction-table.html',
     styleUrl: './transaction-table.css',
 })
-export class TransactionTable implements OnInit {
-
-    ngOnInit() {
-        this.setStatusFilter('COMPLETED')
-    }
+export class TransactionTable {
 
     private service = inject(TransactionsService)
     public readonly modal = viewChild<AddTransactionModal>('addOrUpdateModal');
@@ -177,10 +173,6 @@ export class TransactionTable implements OnInit {
     protected readonly _availablePageSizes = [5, 10, 15, 20, 10000];
     protected readonly _pageSize = signal(this._availablePageSizes[1]);
 
-    protected setStatusFilter(status: 'COMPLETED' | 'UPCOMING') {
-        this._table.getColumn('status')?.setFilterValue([status]);
-    }
-
     readonly _table = createAngularTable<Transaction>(() => ({
         data: this.TRANSACTION_DATA(),
         columns: this._columns,
@@ -215,6 +207,7 @@ export class TransactionTable implements OnInit {
                 pageSize: 10,
             },
         },
+        columnResizeMode: 'onChange',
     }));
     protected readonly _hidableColumns = this._table.getAllColumns().filter((column) => column.getCanHide());
 

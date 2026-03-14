@@ -3,15 +3,11 @@
     <!-- table actions -->
     <div class="flex flex-col justify-between h-min gap-4 py-4 sm:flex-row sm:items-center shrink-0">
 
-        <hlm-tabs tab="past">
-            <hlm-tabs-list>
-                <button hlmTabsTrigger="past" (click)="setStatusFilter('COMPLETED')">History</button>
-                <button hlmTabsTrigger="upcoming" (click)="setStatusFilter('UPCOMING')">Upcoming</button>
-            </hlm-tabs-list>
-        </hlm-tabs>
-
-
         <table-actions/>
+
+        <div class="flex flex-1 justify-end items-center gap-2">
+            <add-transaction-modal #addOrUpdateModal/>
+        </div>
 
         <ng-template #menu>
             <hlm-dropdown-menu class="w-32">
@@ -28,6 +24,7 @@
                 }
             </hlm-dropdown-menu>
         </ng-template>
+
     </div>
 
     <!-- table itself -->
@@ -84,7 +81,7 @@
     </div>
 
     <!-- table pagination -->
-    <div class="py-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center shrink-0">
+    <div class="pt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center shrink-0">
         <div class="flex flex-1">
         <span class="text-muted-foreground text-sm">
 					{{ _table.getSelectedRowModel().rows.length }} of {{ _table.getRowCount() }} row(s) selected
@@ -155,9 +152,7 @@
             </div>
         </div>
 
-        <div class="flex flex-1 justify-end items-center gap-2">
-            <add-transaction-modal #addOrUpdateModal/>
-        </div>
+
     </div>
 
 </div>
