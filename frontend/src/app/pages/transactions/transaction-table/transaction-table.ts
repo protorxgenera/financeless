@@ -36,10 +36,11 @@ import {TableHeadSelection, TableRowSelection} from './components/selection-colu
 import {TableHeadSortButton} from './components/sort-header-button';
 import {Transaction} from './services/transactions-model';
 import {TransactionsService} from './services/transactions-service';
-import {StatusIconCell} from './components/status-icon-cell';
+import {StatusIconCell} from './components/cells/status-icon-cell';
 import {TableActions} from './components/table-actions';
 import {HlmLabelImports} from '@spartan-ng/helm/label';
 import {AddTransactionModal} from './components/add-transaction-modal/add-transaction-modal';
+import {CategoryCell} from './components/cells/category-cell';
 
 @Component({
     selector: 'transaction-table',
@@ -120,7 +121,7 @@ export class TransactionTable {
             id: 'category',
             filterFn: 'arrIncludesSome',
             header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
-            cell: (info) => `<div class="lowercase">${info.getValue<string>()}</div>`,
+            cell: (info) => flexRenderComponent(CategoryCell),
         },
         {
             accessorKey: 'details',

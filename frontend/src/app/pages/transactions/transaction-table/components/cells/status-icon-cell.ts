@@ -11,8 +11,8 @@ import {
 
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
-import {Transaction} from '../services/transactions-model';
-import {StatusIconPipe} from '../pipes/status-icon-pipe';
+import {Transaction} from '../../services/transactions-model';
+import {StatusIconPipe} from '../../pipes/status-icon-pipe';
 import {HlmBadgeImports} from '@spartan-ng/helm/badge';
 
 @Component({

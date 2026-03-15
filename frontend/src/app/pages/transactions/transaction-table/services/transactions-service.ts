@@ -152,4 +152,28 @@ export class TransactionsService {
             }
         )
     }
+
+    updateTransactionCategoryFromTable(transaction: Transaction, category: string) {
+        this.transactionsData.update(
+            (data) => {
+                return data.map((item) => {
+                    if (item.id === transaction.id) {
+                        const updatedTransaction: Transaction = {
+                            id: item.id,
+                            date: item.date,
+                            name: item.name,
+                            amount: item.amount,
+                            currency: item.currency,
+                            category: category, // returns the same transaction, only category is changed
+                            transaction_status: item.transaction_status,
+                            details: item.details,
+                        }
+                        return updatedTransaction
+                    } else {
+                        return item
+                    }
+                })
+            }
+        )
+    }
 }

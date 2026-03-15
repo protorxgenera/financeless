@@ -194,7 +194,7 @@
                                 <hlm-select-value/>
                             </hlm-select-trigger>
                             <hlm-select-content>
-                                <hlm-option value="auto">None</hlm-option>
+                                <hlm-option [value]='undefined'>None</hlm-option>
                                 <div hlmSelectSeparator class="mx-0 w-full"></div>
                                 @for (category of categories; track category) {
                                     <hlm-option [value]="category">{{ category }}</hlm-option>
