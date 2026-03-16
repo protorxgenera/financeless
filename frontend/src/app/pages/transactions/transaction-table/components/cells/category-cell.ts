@@ -82,7 +82,7 @@ export class CategoryCell {
 
     changeCategory(transaction: Transaction, category: string | any[] | undefined) {
         const cleanedCategory = Array.isArray(category) ? category[0] : category;
-        const updatedCategory = cleanedCategory === transaction.category ? '' : cleanedCategory
+        const updatedCategory = cleanedCategory === this.selectedCategory() ? '' : cleanedCategory
         this.selectedCategory.set(updatedCategory)
         this._service.updateTransactionCategoryFromTable(transaction, updatedCategory)
         const messageCategory = updatedCategory === '' ? 'none' : updatedCategory
