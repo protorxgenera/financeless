@@ -82,11 +82,13 @@ export class CategoryCell {
 
     changeCategory(transaction: Transaction, category: string | any[] | undefined) {
         const cleanedCategory = Array.isArray(category) ? category[0] : category;
-        this.selectedCategory.set(cleanedCategory)
-        this._service.updateTransactionCategoryFromTable(transaction, cleanedCategory)
+        const updatedCategory = cleanedCategory === transaction.category ? '' : cleanedCategory
+        this.selectedCategory.set(updatedCategory)
+        this._service.updateTransactionCategoryFromTable(transaction, updatedCategory)
+        const messageCategory = updatedCategory === '' ? 'none' : updatedCategory
 
         toast.info('Transaction category updated', {
-            description: `Transaction: ${transaction.name} has been updated with category: ${cleanedCategory}.`,
+            description: `Transaction: ${transaction.name} has been updated with category: ${messageCategory}.`,
         });
     }
 
