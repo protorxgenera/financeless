@@ -42,7 +42,7 @@ import {
 
                             @for (category of categories; track category) {
                                 <button hlm-command-item [value]="category"
-                                        (click)="changeCategory(element, category); ctx.close()">
+                                        (selected)="changeCategory(element, category); ctx.close()">
                                     {{ category }}
                                     <ng-icon
                                         hlm
