@@ -232,7 +232,7 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
             <!-- COLUMN VISIBILITY -->
             <button hlmBtn class="h-8" variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
                 Columns
-                <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm"/>
+                <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" class="text-ring"/>
             </button>
             <ng-template #menu>
                 <hlm-dropdown-menu class="w-32">

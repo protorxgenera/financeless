@@ -31,9 +31,9 @@ import {toast} from 'ngx-sonner';
                 size="sm"
                 class="w-50 flex-1 justify-between md:max-w-50 lg:max-w-75"
             >
-                <p class="font-normal"
+                <p class="font-normal text-primary"
                    [class.opacity-50]="!selectedCategory()">{{ selectedCategory() ? selectedCategory() : 'Select category...' }}</p>
-                <ng-icon hlm name="lucideChevronDown" size="sm" class="opacity-50"/>
+                <ng-icon hlm name="lucideChevronDown" size="sm" class="text-ring"/>
             </button>
             <hlm-popover-content class="w-50 p-0" *hlmPopoverPortal="let ctx">
                 <hlm-command>
