@@ -14,6 +14,7 @@ import {provideIcons} from '@ng-icons/core';
 import {
     lucideCheck, lucideChevronDown,
 } from '@ng-icons/lucide';
+import {toast} from 'ngx-sonner';
 
 @Component({
     selector: 'category-cell',
@@ -81,8 +82,10 @@ export class CategoryCell {
         const cleanedCategory = Array.isArray(category) ? category[0] : category;
         this.selectedCategory.set(cleanedCategory)
         this._service.updateTransactionCategoryFromTable(transaction, cleanedCategory)
-        // console.log(transaction)
-        // console.log(category)
+
+        toast.info('Transaction category updated', {
+            description: `Transaction: ${transaction.name} has been updated with category: ${cleanedCategory}.`,
+        });
     }
 
     // TODO: exclude undefined from category list
