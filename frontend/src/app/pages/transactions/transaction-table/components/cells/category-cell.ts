@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, input, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked} from '@angular/core';
 import {BrnSelect, BrnSelectImports, BrnSelectOption} from '@spartan-ng/brain/select';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
@@ -76,14 +76,20 @@ export class CategoryCell {
     private readonly _context = injectFlexRenderContext<CellContext<Transaction, unknown>>();
     private readonly _service = inject(TransactionsService)
 
+    private readonly _transactionId = this._context.row.original.id;
+
     protected readonly element = this._context.row.original;
     protected readonly categories = new Set(this._service.getTransactions()().map((item) => item.category))
-    public readonly selectedCategory = signal<string | undefined>(this.element.category);
+
+    public readonly selectedCategory = computed(() => {
+        const transaction = this._service.getTransactions()()
+            .find(t => t.id === this._transactionId);
+        return transaction?.category;
+    });
 
     changeCategory(transaction: Transaction, category: string | any[] | undefined) {
         const cleanedCategory = Array.isArray(category) ? category[0] : category;
         const updatedCategory = cleanedCategory === this.selectedCategory() ? '' : cleanedCategory
-        this.selectedCategory.set(updatedCategory)
         this._service.updateTransactionCategoryFromTable(transaction, updatedCategory)
         const messageCategory = updatedCategory === '' ? 'none' : updatedCategory
 
@@ -95,6 +101,6 @@ export class CategoryCell {
     // TODO: exclude undefined from category list [DONE]
     // TODO: fix scrolling bar on category list [DONE]
     // TODO: maybe add search on category list  [DONE]
-    // TODO: make changes in update-form affect the category column on-the-fly
+    // TODO: changes in update-form affect the category column on-the-fly [DONE]
 
 }
