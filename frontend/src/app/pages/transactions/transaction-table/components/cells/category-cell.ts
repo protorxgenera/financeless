@@ -42,6 +42,8 @@ import {toast} from 'ngx-sonner';
                         <hlm-command-group>
 
                             @for (category of categories; track category) {
+                                @if(category) {
+
                                 <button hlm-command-item [value]="category"
                                         (selected)="changeCategory(element, category); ctx.close()">
                                     {{ category }}
@@ -56,7 +58,7 @@ import {toast} from 'ngx-sonner';
 										}"
                                     />
                                 </button>
-                            }
+                            }}
 
                         </hlm-command-group>
                     </hlm-command-list>
@@ -88,7 +90,7 @@ export class CategoryCell {
         });
     }
 
-    // TODO: exclude undefined from category list
+    // TODO: exclude undefined from category list [DONE]
     // TODO: fix scrolling bar on category list [DONE]
     // TODO: maybe add search on category list  [DONE]
     // TODO: make changes in update-form affect the category column on-the-fly
