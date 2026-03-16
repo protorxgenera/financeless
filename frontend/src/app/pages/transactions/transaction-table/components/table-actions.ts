@@ -128,6 +128,7 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
                                             class="ml-auto"
                                             [class.opacity-0]="_currentStatus() !== status"
                                             name="lucideCheck"
+                                            size="sm"
                                             hlmCommandIcon
                                         />
                                     </button>
@@ -207,6 +208,7 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
                                             hlm
                                             class="ml-auto"
                                             [class.opacity-0]="_currentType() !== type"
+                                            size="sm"
                                             name="lucideCheck"
                                             hlmCommandIcon
                                         />
