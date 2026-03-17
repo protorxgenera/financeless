@@ -1,24 +1,19 @@
-import {ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked} from '@angular/core';
-import {BrnSelect, BrnSelectImports, BrnSelectOption} from '@spartan-ng/brain/select';
-import { HlmSelectImports } from '@spartan-ng/helm/select';
-import { type CellContext, injectFlexRenderContext } from '@tanstack/angular-table';
+import {ChangeDetectionStrategy, Component, computed, inject} from '@angular/core';
+import {BrnSelectImports} from '@spartan-ng/brain/select';
+import {type CellContext, injectFlexRenderContext} from '@tanstack/angular-table';
 import {Transaction} from '../../services/transactions-model';
-import {TransactionTable} from '../../transaction-table';
 import {TransactionsService} from '../../services/transactions-service';
 import {HlmCommandImports, HlmCommandInput} from '@spartan-ng/helm/command';
-import {HlmComboboxImports} from '@spartan-ng/helm/combobox';
 import {HlmPopoverImports} from '@spartan-ng/helm/popover';
 import {HlmIconImports} from '@spartan-ng/helm/icon';
 import {HlmButtonImports} from '@spartan-ng/helm/button';
 import {provideIcons} from '@ng-icons/core';
-import {
-    lucideCheck, lucideChevronDown,
-} from '@ng-icons/lucide';
+import {lucideCheck, lucideChevronDown,} from '@ng-icons/lucide';
 import {toast} from 'ngx-sonner';
 
 @Component({
     selector: 'category-cell',
-    imports: [BrnSelectImports, HlmSelectImports, BrnSelect, BrnSelectOption, HlmCommandInput, HlmComboboxImports, HlmPopoverImports, HlmCommandImports, HlmIconImports, HlmButtonImports],
+    imports: [BrnSelectImports, HlmCommandInput, HlmPopoverImports, HlmCommandImports, HlmIconImports, HlmButtonImports],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [provideIcons({ lucideCheck, lucideChevronDown})],
     template: `

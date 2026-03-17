@@ -2,21 +2,18 @@ import {Component, inject} from '@angular/core';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {lucideCopy, lucideDelete, lucideEllipsis, lucideSquarePen} from '@ng-icons/lucide';
 import {HlmButtonImports} from '@spartan-ng/helm/button';
-import {HlmDropdownMenuConfig, HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
+import {HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
 import {HlmIconImports} from '@spartan-ng/helm/icon';
 import {type CellContext, injectFlexRenderContext} from '@tanstack/angular-table';
 import {Transaction} from '../services/transactions-model';
 import {TransactionsService} from '../services/transactions-service';
 import {toast} from 'ngx-sonner';
-import {HlmToaster} from '@spartan-ng/helm/sonner';
-import {SuccessSonner} from './add-transaction-modal/submit-sonner/submit-sonner';
-import {Dialog} from '@angular/cdk/dialog';
 import {DialogService} from './dialog/dialog-service';
 
 
 @Component({
     selector: 'spartan-action-dropdown',
-    imports: [HlmButtonImports, NgIcon, HlmIconImports, HlmDropdownMenuImports, HlmToaster, SuccessSonner],
+    imports: [HlmButtonImports, NgIcon, HlmIconImports, HlmDropdownMenuImports],
     providers: [provideIcons({lucideEllipsis, lucideCopy, lucideDelete, lucideSquarePen})],
     template: `
         <button hlmBtn variant="ghost" class="h-8 w-8 p-0" [hlmDropdownMenuTrigger]="ActionDropDownMenu" align="end">

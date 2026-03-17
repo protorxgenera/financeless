@@ -1,4 +1,4 @@
-import type { BooleanInput } from '@angular/cdk/coercion';
+import type {BooleanInput} from '@angular/cdk/coercion';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -10,14 +10,11 @@ import {
     Renderer2,
     signal,
 } from '@angular/core';
-import { provideIcons } from '@ng-icons/core';
-import { lucideX } from '@ng-icons/lucide';
-import { injectExposedSideProvider, injectExposesStateProvider } from '@spartan-ng/brain/core';
-import { HlmButton } from '@spartan-ng/helm/button';
-import { HlmIconImports } from '@spartan-ng/helm/icon';
-import { classes } from '@spartan-ng/helm/utils';
-import { cva } from 'class-variance-authority';
-import { HlmSheetClose } from './hlm-sheet-close';
+import {provideIcons} from '@ng-icons/core';
+import {lucideX} from '@ng-icons/lucide';
+import {injectExposedSideProvider, injectExposesStateProvider} from '@spartan-ng/brain/core';
+import {classes} from '@spartan-ng/helm/utils';
+import {cva} from 'class-variance-authority';
 
 export const sheetVariants = cva(
     'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
@@ -38,7 +35,7 @@ export const sheetVariants = cva(
 
 @Component({
     selector: 'hlm-sheet-content',
-    imports: [HlmIconImports, HlmButton, HlmSheetClose],
+    imports: [],
     providers: [provideIcons({ lucideX })],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
