@@ -232,7 +232,7 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
             <!-- COLUMN VISIBILITY -->
             <button hlmBtn class="h-8" variant="outline" align="end" [hlmDropdownMenuTrigger]="menu">
                 Columns
-                <ng-icon hlm name="lucideChevronDown" class="ml-2" size="sm" class="text-ring"/>
+                <ng-icon hlm name="lucideChevronDown" class="ml-2 text-ring" size="sm"/>
             </button>
             <ng-template #menu>
                 <hlm-dropdown-menu class="w-32">
@@ -251,7 +251,7 @@ import {TypeIconPipe} from '../pipes/type-icon-pipe';
             </ng-template>
 
             <!-- CALENDAR RANGE PICKER -->
-            <cal-date-picker-range/>
+            <cal-date-picker-range (providedDate)="dateIntervalSelected($event)"/>
 
         </div>
     `,
@@ -298,6 +298,10 @@ export class TableActions {
             this._currentStatus.set(status)
         }
         this._table.getColumn('status')?.setFilterValue(this._currentStatus());
+    }
+
+    dateIntervalSelected(dateInterval: Date[] | undefined) {
+        this._table.getColumn('date')?.setFilterValue(dateInterval);
     }
 
     typeSelected(type: TransactionType) {

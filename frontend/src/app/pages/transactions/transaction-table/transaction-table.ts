@@ -15,7 +15,6 @@ import {HlmDropdownMenuImports} from '@spartan-ng/helm/dropdown-menu';
 import {HlmIconImports} from '@spartan-ng/helm/icon';
 import {HlmSelectImports} from '@spartan-ng/helm/select';
 import {HlmTableImports} from '@spartan-ng/helm/table';
-import {hlmMuted} from '@spartan-ng/helm/typography';
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -41,6 +40,7 @@ import {TableActions} from './components/table-actions';
 import {HlmLabelImports} from '@spartan-ng/helm/label';
 import {AddTransactionModal} from './components/add-transaction-modal/add-transaction-modal';
 import {CategoryCell} from './components/cells/category-cell';
+import dateBetweenFilterFn from '../../../utils/date-range';
 
 @Component({
     selector: 'transaction-table',
@@ -99,6 +99,7 @@ export class TransactionTable {
             accessorKey: 'date',
             id: 'date',
             size: 20,
+            filterFn: 'dateBetweenFilterFn',
             header: () => flexRenderComponent(TableHeadSortButton, { inputs: { header: '' } }),
             cell: (info) => {
 
@@ -195,6 +196,9 @@ export class TransactionTable {
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        filterFns: {
+            dateBetweenFilterFn: dateBetweenFilterFn
+        },
         state: {
             sorting: this._sorting(),
             columnFilters: this._columnFilters(),
@@ -210,12 +214,4 @@ export class TransactionTable {
         columnResizeMode: 'onChange',
     }));
     protected readonly _hidableColumns = this._table.getAllColumns().filter((column) => column.getCanHide());
-
-    protected _filterChange(email: Event) {
-        const target = email.target as HTMLInputElement;
-        const typedValue = target.value;
-        this._table.setGlobalFilter(typedValue);
-    }
-
-    protected readonly hlmMuted = hlmMuted;
 }
