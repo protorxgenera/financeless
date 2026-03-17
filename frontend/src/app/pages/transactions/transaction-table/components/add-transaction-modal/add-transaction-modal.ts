@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, input, signal, viewChild} from '@angular/core';
+import {Component, computed, effect, inject, input, signal, untracked, viewChild} from '@angular/core';
 import {NgIcon, provideIcons} from '@ng-icons/core';
 import {lucideCalendar1, lucideChevronDown, lucideCross, lucideRotateCw} from '@ng-icons/lucide';
 import {HlmSheetImports} from '@spartan-ng/helm/sheet';
@@ -50,15 +50,43 @@ import {SuccessSonner} from './submit-sonner/submit-sonner';
 })
 export class AddTransactionModal {
 
-    public transaction = signal<Transaction | null>(null);
-    public mode = computed(() => this.transaction() ? 'Update' : 'Add')
-
-    public readonly sheetRef = viewChild(BrnSheet)
-
     private readonly service = inject(TransactionsService)
+    private readonly _fb = inject(FormBuilder)
+    private readonly sheetRef = viewChild(BrnSheet)
+
+    protected types = [
+        {
+            id: 'income',
+            title: 'Income',
+        },
+        {
+            id: 'expense',
+            title: 'Expense',
+        },
+    ]
+    protected currencies = [
+        {
+            id: 'ron',
+            title: 'RON',
+            icon: 'RON'
+        },
+        {
+            id: 'eur',
+            title: 'EUR',
+            icon: '€'
+        },
+        {
+            id: 'usd',
+            title: 'USD',
+            icon: '$'
+        },
+    ]
     protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
 
-    private readonly _fb = inject(FormBuilder)
+    protected mode = computed(() => this.transaction() ? 'Update' : 'Add')
+    protected transaction = signal<Transaction | null>(null);
+    protected selectedType = signal<typeof this.types[0] | undefined>(undefined)
+
     private _now: Date = new Date()
     private _currentTime= this._now.toTimeString().split(' ')[0]
 
@@ -86,11 +114,20 @@ export class AddTransactionModal {
 
                 const typeObj = this.types.find(t => t.id === (data.amount > 0 ? 'income' : 'expense'))
                 this.selectedType.set(typeObj)
-
-                this.selectedCurrency.set(this.currencies[0])
-
+                untracked(() => {
+                    this.currencies.forEach((item, i) => {
+                        if(data.currency === item.id) {
+                            this.selectedCurrency.set(this.currencies[i])
+                        }
+                    })
+                    this.form.patchValue(
+                        {
+                            currency: this.selectedCurrency().id
+                        }
+                    )
+                })
             } else {
-                this.reset()
+                untracked(()=> this.reset())
             }
         })
     }
@@ -105,38 +142,6 @@ export class AddTransactionModal {
         category: ['', []],
         description: ['', [Validators.maxLength(100)]],
     })
-
-
-    public types = [
-        {
-            id: 'income',
-            title: 'Income',
-        },
-        {
-            id: 'expense',
-            title: 'Expense',
-        },
-    ]
-
-    selectedType = signal<typeof this.types[0] | undefined>(undefined)
-
-    public currencies = [
-        {
-            id: 'ron',
-            title: 'RON',
-            icon: 'RON'
-        },
-        {
-            id: 'eur',
-            title: 'EUR',
-            icon: '€'
-        },
-        {
-            id: 'usd',
-            title: 'USD',
-            icon: '$'
-        },
-    ]
 
     public minDate = new Date(2005, 0, 1)
     public maxDate = new Date(2040, 11, 31)
