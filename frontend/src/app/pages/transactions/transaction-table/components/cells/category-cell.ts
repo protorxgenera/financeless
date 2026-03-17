@@ -74,7 +74,7 @@ export class CategoryCell {
     private readonly _transactionId = this._context.row.original.id;
 
     protected readonly element = this._context.row.original;
-    protected readonly categories = new Set(this._service.getTransactions()().map((item) => item.category))
+    protected readonly categories = this._service.getCategories()
 
     public readonly selectedCategory = computed(() => {
         const transaction = this._service.getTransactions()()
@@ -92,10 +92,4 @@ export class CategoryCell {
             description: `Transaction: ${transaction.name} has been updated with category: ${messageCategory}.`,
         });
     }
-
-    // TODO: exclude undefined from category list [DONE]
-    // TODO: fix scrolling bar on category list [DONE]
-    // TODO: maybe add search on category list  [DONE]
-    // TODO: changes in update-form affect the category column on-the-fly [DONE]
-
 }

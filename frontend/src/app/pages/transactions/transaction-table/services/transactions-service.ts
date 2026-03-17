@@ -125,6 +125,10 @@ export class TransactionsService {
         return this.transactionsData.asReadonly();
     }
 
+    getCategories() {
+        return Array.from((new Set(this.transactionsData.asReadonly()().map((item) => item.category)))).sort()
+    }
+
     addTransaction(transaction: Transaction) {
         this.transactionsData.update(
             (data) => { return [...data, transaction] }

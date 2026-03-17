@@ -272,7 +272,7 @@ export class TableActions {
     protected readonly _typeState = signal<'closed' | 'open'>('closed'); // the state of the popover
 
     private readonly transactionsService = inject(TransactionsService)
-    protected readonly _currentCategories = new Set(this.transactionsService.getTransactions()().map((item) => item.category))
+    protected readonly _currentCategories = this.transactionsService.getCategories()
     protected readonly _categoryFilter = signal<string[]>([]);
     protected readonly _categories = signal([...this._currentCategories]);
     protected readonly _categoryState = signal<'closed' | 'open'>('closed');

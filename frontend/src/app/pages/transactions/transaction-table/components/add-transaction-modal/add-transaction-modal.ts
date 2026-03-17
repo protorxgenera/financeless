@@ -81,7 +81,7 @@ export class AddTransactionModal {
             icon: '$'
         },
     ]
-    protected categories = new Set(this.service.getTransactions()().map((item) => item.category))
+    protected categories = this.service.getCategories()
 
     protected mode = computed(() => this.transaction() ? 'Update' : 'Add')
     protected transaction = signal<Transaction | null>(null);
