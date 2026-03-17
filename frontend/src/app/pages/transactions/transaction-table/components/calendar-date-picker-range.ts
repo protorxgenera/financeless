@@ -3,13 +3,14 @@ import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HlmButton} from '@spartan-ng/helm/button';
 import {HlmDateRangePicker} from '@spartan-ng/helm/date-picker';
 import {NgIcon, provideIcons} from '@ng-icons/core';
-import {lucideX} from '@ng-icons/lucide';
+import {lucideCalendarRange, lucideX} from '@ng-icons/lucide';
 import {HlmIcon} from '@spartan-ng/helm/icon';
+import {StatusIconPipe} from '../pipes/status-icon-pipe';
 
 @Component({
     selector: 'cal-date-picker-range',
-    imports: [HlmDateRangePicker, ReactiveFormsModule, HlmButton, HlmIcon, NgIcon],
-    providers: [provideIcons({lucideX})],
+    imports: [HlmDateRangePicker, ReactiveFormsModule, HlmButton, HlmIcon, NgIcon, StatusIconPipe],
+    providers: [provideIcons({lucideX, lucideCalendarRange})],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'flex justify-center bg-surface overflow-auto',

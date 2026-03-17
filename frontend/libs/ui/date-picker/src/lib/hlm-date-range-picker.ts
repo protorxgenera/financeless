@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { provideIcons } from '@ng-icons/core';
-import { lucideChevronDown } from '@ng-icons/lucide';
+import {lucideCalendar, lucideChevronDown} from '@ng-icons/lucide';
 import type { BrnDialogState } from '@spartan-ng/brain/dialog';
 import type { ChangeFn, TouchFn } from '@spartan-ng/brain/forms';
 import { HlmCalendarRange } from '@spartan-ng/helm/calendar';
@@ -34,7 +34,7 @@ let nextId = 0;
 @Component({
     selector: 'hlm-date-range-picker',
     imports: [HlmIconImports, HlmPopoverImports, HlmCalendarRange],
-    providers: [HLM_DATE_RANGE_PICKER_VALUE_ACCESSOR, provideIcons({ lucideChevronDown })],
+    providers: [HLM_DATE_RANGE_PICKER_VALUE_ACCESSOR, provideIcons({ lucideChevronDown, lucideCalendar })],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'block',
@@ -53,6 +53,7 @@ let nextId = 0;
                 [disabled]="_mutableDisabled()"
                 hlmPopoverTrigger
             >
+                <ng-icon hlm name="lucideCalendar" class="mr-2" size="sm"/>
                 <span class="truncate">
                     @if (_formattedDate(); as formattedDate) {
                         {{ formattedDate }}
