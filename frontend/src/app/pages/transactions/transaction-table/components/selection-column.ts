@@ -10,9 +10,9 @@ import { type CellContext, type HeaderContext, injectFlexRenderContext } from '@
     },
     template: `
 		<hlm-checkbox
-			[checked]="_context.table.getIsAllRowsSelected()"
+			[checked]="_context.table.getIsAllPageRowsSelected()"
 			[indeterminate]="_context.table.getIsSomeRowsSelected()"
-			(checkedChange)="_context.table.toggleAllRowsSelected()"
+			(checkedChange)="_context.table.toggleAllPageRowsSelected()"
 		/>
 	`,
 })
