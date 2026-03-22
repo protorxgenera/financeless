@@ -1,5 +1,6 @@
 # IDEs (IntelliJ)
 .idea/
+.idea/workspace.xml
 
 # Backend (Spring Boot & Java)
 backend/target/
