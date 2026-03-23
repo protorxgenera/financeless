@@ -2,7 +2,7 @@ export const data = {
     user: {
         name: 'Ben',
         email: 'ben@protorxgenera.com',
-        avatar: '/assets/avatar_b.png',
+        avatar: 'assets/avatar_b.png',
     },
     navMain: [
         {
