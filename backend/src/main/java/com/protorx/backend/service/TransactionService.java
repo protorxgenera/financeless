@@ -25,6 +25,7 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Transactional
     public Transaction createTransaction(Transaction transaction) {
         // 1. Verificam daca avem un cont asociat in cerere
