@@ -1,0 +1,282 @@
+<hlm-sheet side="right" >
+
+
+    <button id="edit-profile" (click)="open(null)" hlmBtn size="sm" class="hidden h-8 sm:flex">
+        <ng-icon hlm name="lucideCirclePlus" size="sm"/>
+        <span>Add transaction</span>
+    </button>
+
+    <hlm-sheet-content *hlmSheetPortal="let ctx"
+                       class="right-2 top-2 bottom-2 h-[calc(100dvh-1rem)] sm:max-w-md rounded-xl border shadow-2xl overflow-auto no-scrollbar">
+        <hlm-sheet-header>
+            <h3 hlmSheetTitle>{{ mode() }} transaction</h3>
+            <p hlmSheetDescription>
+                {{
+                    mode() === 'Add' ? 'Add a new transaction' : 'Update this transaction'
+                }}
+            </p>
+        </hlm-sheet-header>
+
+        <div class="grid flex-1 auto-rows-min gap-6 px-4">
+
+            <form id="form-add-transaction" [formGroup]="form" (ngSubmit)="submit(ctx)">
+                <hlm-field-group>
+
+                    <!-- type (income | expense) -->
+                    <hlm-field-group>
+                        <fieldset hlmFieldSet>
+                            <label hlmFieldLabel>Type of transaction</label>
+                            <hlm-radio-group formControlName="type" class="grid grid-cols-2 gap-4">
+                                @for (type of types; track type.id) {
+                                    <label hlmFieldLabel [for]="'type' + type.id"
+                                           class="hover:bg-accent/10 border transition-colors"
+                                           [class.bg-income!]="isIncomeSelected(type.id)"
+                                           [class.border-green-500!]="isIncomeSelected(type.id)"
+                                           [class.text-green-500!]="isIncomeSelected(type.id)"
+                                    >
+                                        <hlm-field orientation="horizontal">
+                                            <hlm-field-content>
+                                                <hlm-field-title>{{ type.title }}</hlm-field-title>
+                                                <!-- <hlm-field-description>{{ type.description }}</hlm-field-description> -->
+                                            </hlm-field-content>
+                                            <hlm-radio (change)="selectType(type)" [value]="type.id"
+                                                       [id]="'type' + type.id">
+                                                <hlm-radio-indicator indicator/>
+                                            </hlm-radio>
+                                        </hlm-field>
+                                    </label>
+                                }
+                            </hlm-radio-group>
+                            @if (form.controls.type.touched && form.controls.type.invalid) {
+                                <hlm-field-error>You must select a transaction type to continue.</hlm-field-error>
+                            }
+                        </fieldset>
+                    </hlm-field-group>
+
+                    <!-- name -->
+                    <hlm-field>
+                        <label hlmFieldLabel for="name">Transaction</label>
+                        <input
+                            hlmInput
+                            id="name"
+                            placeholder="Transaction name"
+                            autoComplete="off"
+                            formControlName="name"
+                        />
+                        @if (form.controls.name.touched && form.controls.name.invalid) {
+                            <hlm-field-error>
+                                @if (form.controls.name.errors?.['required'] || form.controls.name.errors?.['minlength']) {
+                                    Title must be at least 3 characters.
+                                }
+                                @if (form.controls.name.errors?.['maxlength']) {
+                                    Title cannot exceed 32 characters.
+                                }
+                            </hlm-field-error>
+                        }
+                    </hlm-field>
+
+                    <!-- amount -->
+                    <hlm-field>
+
+                        <label hlmFieldLabel for="amount">Amount</label>
+                        <div hlmInputGroup>
+                            <div hlmInputGroupAddon>
+                                <span hlmInputGroupText>{{ selectedCurrency().icon }}
+                                </span>
+                            </div>
+
+                            <div hlmInputGroupAddon>
+                                <span hlmInputGroupText>
+                            @if (selectedType()?.id === 'income') {
+                                +
+                            } @else if (selectedType()?.id === 'expense') {
+                                -
+                            } @else {
+                                {{ '' }}
+                            }
+                            </span>
+                            </div>
+
+                            <input
+                                hlmInputGroupInput
+                                id="amount"
+                                placeholder="200.00"
+                                autoComplete="off"
+                                formControlName="amount"
+                            />
+
+                            <div hlmInputGroupAddon align="inline-end">
+                                <button
+                                    hlmInputGroupButton
+                                    variant="ghost"
+                                    type="button"
+                                    class="pr-1.5! text-xs"
+                                    [hlmDropdownMenuTrigger]="searchMenu"
+                                    align="end"
+                                >
+                                    {{ selectedCurrency().title }}
+                                    <ng-icon name="lucideChevronDown"/>
+                                </button>
+                            </div>
+                        </div>
+
+                        @if (form.controls.amount.touched && form.controls.amount.invalid) {
+                            <hlm-field-error>
+                                @if (form.controls.amount.errors?.['required']) {
+                                    Amount is required.
+                                } @else if (form.controls.amount.errors?.['notANumber']) {
+                                    Please enter a valid number (digits only).
+                                } @else if (form.controls.amount.errors?.['min']) {
+                                    Amount must be greater than zero. A minus will be added automatically if the transaction is of type Expense.
+                                }
+                            </hlm-field-error>
+                        }
+
+                        <ng-template #searchMenu>
+                            <hlm-dropdown-menu class="w-56 [--radius:0.95rem]">
+                                @for (currency of currencies; track currency.id) {
+                                    <button hlmDropdownMenuItem
+                                            (triggered)="selectCurrency(currency)"
+                                    >{{ currency.title }}
+                                    </button>
+                                }
+                            </hlm-dropdown-menu>
+                        </ng-template>
+                    </hlm-field>
+
+                    <!-- datetime -->
+                    <hlm-field-group>
+                        <fieldset hlmFieldSet>
+                            <div class="grid grid-cols-2 gap-4 w-full">
+                                <div class="flex flex-col gap-3">
+                                    <label for="date-picker" hlmLabel>Date</label>
+                                    <hlm-date-picker
+                                        class="w-full"
+                                        formControlName="date"
+                                        [autoCloseOnSelect]="true"
+                                        buttonId="date-picker"
+                                        [min]="minDate"
+                                        [max]="maxDate">
+                                        <span>Select date</span>
+                                    </hlm-date-picker>
+                                </div>
+
+                                <div class="flex flex-col gap-3">
+                                    <label for="time-picker" hlmLabel>Time</label>
+                                    <div class="flex gap-3"><input
+                                        hlmInput
+                                        formControlName="time"
+                                        id="time-picker"
+                                        type="time"
+                                        step="1"
+                                        class="w-full bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                    />
+                                        <button hlmBtn type="button"
+                                                variant="outline"
+                                                (click)="setToNow()">
+                                            <ng-icon hlm name="lucideCalendar1" size="sm"/>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </hlm-field-group>
+
+                    <!-- category -->
+                    <hlm-field>
+
+                        <!-- think about switching from a selectComponent to a comboboxComponent for additional features -->
+                        <!-- like search and no-results-template (for a possible add-new-category button) -->
+                        <!-- the problem with the combobox is that it doesn't animate on open and close. -->
+                        <label hlmFieldLabel for="category">Category</label>
+                        <brn-select class="inline-block" id="category" formControlName="category" placeholder="Select">
+                            <hlm-select-trigger class="w-full">
+                                <hlm-select-value/>
+                            </hlm-select-trigger>
+                            <hlm-select-content>
+                                <hlm-option [value]='undefined'>None</hlm-option>
+                                <div hlmSelectSeparator class="mx-0 w-full"></div>
+                                @for (category of categories; track category) {
+                                    <hlm-option [value]="category">{{ category }}</hlm-option>
+                                }
+                            </hlm-select-content>
+                        </brn-select>
+                    </hlm-field>
+
+                    <!-- description -->
+                    <hlm-field>
+                        <label hlmFieldLabel for="description">Description</label>
+                        <hlm-input-group>
+								<textarea
+                                    hlmInputGroupTextarea
+                                    id="description"
+                                    class="min-h-24"
+                                    placeholder="Add transaction details here (optional)"
+                                    rows="6"
+                                    formControlName="description"
+                                ></textarea>
+                            <hlm-input-group-addon align="block-end">
+                                <span
+                                    hlmInputGroupText>{{ form.controls.description.value?.length || 0 }}/100 characters</span>
+                            </hlm-input-group-addon>
+                        </hlm-input-group>
+                        @if (form.controls.description.touched && form.controls.description.invalid) {
+                            <hlm-field-error>
+                                @if (form.controls.description.errors?.['maxlength']) {
+                                    Description cannot exceed 100 characters.
+                                }
+                            </hlm-field-error>
+                        }
+                    </hlm-field>
+
+                </hlm-field-group>
+            </form>
+
+        </div>
+
+        <hlm-sheet-footer>
+            <div class="flex gap-2">
+                <button hlmBtn class="flex flex-1" variant="outline" type="button" (click)="reset()">
+                    <ng-icon name="lucideRotateCw"/>
+                    Reset
+                </button>
+                <button hlmBtn type="button" class="flex flex-3" form="form-add-transaction" (click)="submit(ctx)">Save</button>
+            </div>
+
+
+            <button [hlmAlertDialogTriggerFor]="myAlert" hlmBtn variant="outline">Close</button>
+
+        </hlm-sheet-footer>
+
+        <button
+            hlmBtn
+            variant="ghost"
+            size="icon-sm"
+            class="absolute inset-e-4 top-4"
+            [hlmAlertDialogTriggerFor]="myAlert"
+        >
+            <span class="sr-only">Close</span>
+            <ng-icon hlm size="sm" name="lucideX"/>
+        </button>
+
+    </hlm-sheet-content>
+</hlm-sheet>
+
+<hlm-alert-dialog #myAlert>
+    <hlm-alert-dialog-content *hlmAlertDialogPortal="let ctx">
+        <hlm-alert-dialog-header>
+            <h2 hlmAlertDialogTitle>Are you absolutely sure?</h2>
+            <p hlmAlertDialogDescription>
+                This action cannot be undone. This will permanently delete your account and remove your data from our
+                servers.
+            </p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+            <button hlmAlertDialogCancel (click)="ctx.close()">Cancel</button>
+            <button hlmAlertDialogAction (click)="closeSheet(ctx)">Continue</button>
+        </hlm-alert-dialog-footer>
+    </hlm-alert-dialog-content>
+</hlm-alert-dialog>
+
+<submit-sonner/>
