@@ -5,6 +5,7 @@
         "ng": "ng",
         "start": "ng serve",
         "build": "ng build --base-href /financeless/",
+        "electronBuild": "ng build --base-href ./",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
         "deploy": "ng deploy --base-href=/financeless/ --dir=dist/frontend/browser"

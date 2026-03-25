@@ -17,3 +17,11 @@ spring:
     enabled: true
     url: jdbc:sqlite:data/financeless.db
     baseline-on-migrate: true
+
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "http://localhost:4200"
+        allowed-methods: "GET,POST,OPTIONS"
+        allowed-headers: "*"

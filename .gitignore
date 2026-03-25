@@ -5,3 +5,15 @@
 # Backend (Spring Boot & Java)
 backend/target/
 backend/.mvn/
+backend/out/
+*.jar
+data/
+
+# Electron specific
+electron/node_modules/
+electron/dist/
+
+# Angular
+frontend/node_modules/
+frontend/dist/
+.angular/
