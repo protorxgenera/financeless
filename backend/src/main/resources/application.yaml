@@ -2,7 +2,7 @@ spring:
   application:
     name: backend
   datasource:
-    url: jdbc:sqlite:data/financeless.db
+    url: jdbc:sqlite:${sqlite.path:data/financeless.db}
     username: root
     password: root
     driver-class-name: org.sqlite.JDBC
@@ -15,9 +15,12 @@ spring:
         dialect: org.hibernate.community.dialect.SQLiteDialect
   flyway:
     enabled: true
-    url: jdbc:sqlite:data/financeless.db
+    user: root
+    password: root
+    url: jdbc:sqlite:${sqlite.path:data/financeless.db}
+    locations: classpath:db/migration
     baseline-on-migrate: true
-
+    check-location: true
 management:
   endpoints:
     web:
@@ -25,3 +28,6 @@ management:
         allowed-origins: "http://localhost:4200"
         allowed-methods: "GET,POST,OPTIONS"
         allowed-headers: "*"
+sql:
+  init:
+    mode: never

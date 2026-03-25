@@ -4,15 +4,32 @@ const path = require('path');
 
 let serverProcess;
 
+const fs = require('fs');
+
 function startBackend() {
 
     // Logic: If packaged, look in Resources. If dev, look in your backend folder.
     const isPackaged = app.isPackaged;
+    const jarName = 'financeless-backend.jar';
     const jarPath = isPackaged
-        ? path.join(process.resourcesPath, 'backend/financeless-backend.jar') // After packaging
-        : path.join(__dirname, '../backend/target/financeless-backend.jar'); // During local testing
+        ? path.join(process.resourcesPath, 'backend', jarName) // After packaging
+        : path.join(__dirname, '../backend/target', jarName); // During local testing
 
-    serverProcess = spawn('java', ['-jar', jarPath]);
+    const userDataPath = app.getPath('userData');
+
+    if (!fs.existsSync(userDataPath)) {
+        fs.mkdirSync(userDataPath, { recursive: true });
+    }
+
+    const dbPath = path.join(userDataPath, 'financeless.db');
+
+    console.log(`Database location: ${dbPath}`);
+
+    serverProcess = spawn('java', [
+        `-Dsqlite.path=${dbPath}`,
+        '-jar',
+        jarPath
+    ]);
 
     serverProcess.stdout.on('data', (data) => {
         console.log(`Backend: ${data}`);
@@ -39,14 +56,14 @@ function createWindow() {
         mainWindow.loadURL('http://localhost:4200');
         mainWindow.webContents.openDevTools();
     } else {
-        const indexPath = path.join(__dirname, '../frontend/dist/browser/index.html');
+        const indexPath = path.join(__dirname, '../frontend/dist/frontend/browser/index.html');
         mainWindow.loadFile(indexPath);
     }
 }
 
 app.whenReady().then(() => {
     const isDev = process.argv.includes('--isDev=true');
-    if (!isDev) {
+    if (isDev) {
         startBackend();
     }
     createWindow();

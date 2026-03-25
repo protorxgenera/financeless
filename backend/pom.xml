@@ -78,9 +78,14 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.45.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-flyway</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
+        <finalName>financeless-backend</finalName>
         <plugins>
             <plugin>
                 <groupId>org.flywaydb</groupId>
